@@ -18,16 +18,15 @@ export default function SpherePage({ title }: PageProps) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#fff',
+    paddingHorizontal: 20,
   },
   heading: {
     fontFamily: 'Lancelot_400Regular',
     fontSize: 32,
-    color: '#D4AF37',
+    color: '#000',
     textAlign: 'center',
     marginTop: 60,
     marginBottom: 20,
-    textShadowColor: 'rgba(0, 0, 0, 0.3)',
-    textShadowOffset: { width: 0, height: 2 },
-    textShadowRadius: 4,
   },
 });

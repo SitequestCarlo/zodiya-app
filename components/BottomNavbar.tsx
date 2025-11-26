@@ -30,10 +30,10 @@ export default function BottomNavbar({ activeTab, onTabChange }: BottomNavbarPro
             activeOpacity={0.7}
           >
             <View style={[styles.iconCircle, isActive && styles.activeIconCircle]}>
-              <tab.Icon 
-                width={24} 
-                height={24} 
-                color={isActive ? '#D4AF37' : 'rgba(255, 255, 255, 0.8)'} 
+              <tab.Icon
+                width={32}
+                height={32}
+                color={isActive ? '#fff' : '#7a7a7a'}
               />
             </View>
             <Text style={[styles.label, isActive && styles.activeLabel]}>
@@ -58,7 +58,9 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     paddingBottom: 20,
     paddingHorizontal: 24,
-    backgroundColor: 'transparent',
+    backgroundColor: '#fff',
+    borderTopWidth: 1,
+    borderColor: '#000',
   },
   button: {
     flex: 1,
@@ -67,27 +69,23 @@ const styles = StyleSheet.create({
     gap: 6,
   },
   iconCircle: {
-    width: 56,
-    height: 56,
-    borderRadius: 28,
-    backgroundColor: 'rgba(24, 40, 69, 0.8)',
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.1)',
   },
   activeIconCircle: {
-    backgroundColor: 'rgba(24, 40, 69, 0.95)',
-    borderColor: 'rgba(212, 175, 55, 0.5)',
-    borderWidth: 2,
+    backgroundColor: '#000',
   },
   label: {
     fontSize: 11,
-    color: 'rgba(255, 255, 255, 0.6)',
+    color: '#7a7a7a',
     fontWeight: '500',
   },
   activeLabel: {
-    color: '#D4AF37',
+    color: '#000',
     fontWeight: '600',
   },
 });

@@ -10,7 +10,6 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import ThreeScene from '../components/ThreeScene';
 import { calculateNatalPositions } from '../utils/natalCalculator';
 
 interface PageProps {
@@ -142,8 +141,12 @@ export default function ChartPage({ title }: PageProps) {
             autoCapitalize="words"
           />
 
-          <TouchableOpacity style={styles.button} onPress={handleCalculate} disabled={isLoading}>
-            {isLoading ? <ActivityIndicator color="#0A0A0A" /> : <Text style={styles.buttonText}>Chart berechnen</Text>}
+          <TouchableOpacity
+            style={[styles.button, isLoading && styles.buttonDisabled]}
+            onPress={handleCalculate}
+            disabled={isLoading}
+          >
+            {isLoading ? <ActivityIndicator color="#000" /> : <Text style={styles.buttonText}>Chart berechnen</Text>}
           </TouchableOpacity>
 
           {error ? <Text style={styles.errorText}>{error}</Text> : null}
@@ -167,9 +170,6 @@ export default function ChartPage({ title }: PageProps) {
           )}
         </View>
 
-        <View style={styles.sceneContainer}>
-          <ThreeScene />
-        </View>
       </ScrollView>
     </KeyboardAvoidingView>
   );
@@ -178,96 +178,95 @@ export default function ChartPage({ title }: PageProps) {
 const styles = StyleSheet.create({
   flex: {
     flex: 1,
+    backgroundColor: '#fff',
   },
   scrollContent: {
     flexGrow: 1,
     paddingBottom: 80,
     paddingHorizontal: 20,
+    backgroundColor: '#fff',
   },
   heading: {
     fontFamily: 'Lancelot_400Regular',
     fontSize: 32,
-    color: '#D4AF37',
+    color: '#000',
     textAlign: 'center',
     marginTop: 60,
     marginBottom: 20,
-    textShadowColor: 'rgba(0, 0, 0, 0.3)',
-    textShadowOffset: { width: 0, height: 2 },
-    textShadowRadius: 4,
   },
   formCard: {
-    backgroundColor: 'rgba(12, 12, 20, 0.7)',
+    backgroundColor: 'transparent',
     borderRadius: 16,
     padding: 20,
     borderWidth: 1,
-    borderColor: 'rgba(212, 175, 55, 0.2)',
+    borderColor: '#000',
   },
   formLabel: {
-    color: '#D4AF37',
+    color: '#000',
     fontFamily: 'CinzelDecorative_400Regular',
     fontSize: 16,
     marginBottom: 8,
     marginTop: 16,
   },
   input: {
-    backgroundColor: 'rgba(255, 255, 255, 0.08)',
+    backgroundColor: '#fff',
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.2)',
+    borderColor: '#000',
     paddingHorizontal: 14,
     paddingVertical: 10,
-    color: '#fff',
+    color: '#000',
     fontSize: 16,
   },
   button: {
-    backgroundColor: '#D4AF37',
+    backgroundColor: '#fff',
     borderRadius: 12,
     paddingVertical: 12,
     alignItems: 'center',
     marginTop: 24,
+    borderWidth: 1,
+    borderColor: '#000',
+  },
+  buttonDisabled: {
+    opacity: 0.6,
   },
   buttonText: {
-    color: '#0A0A0A',
+    color: '#000',
     fontFamily: 'CinzelDecorative_700Bold',
     fontSize: 18,
   },
   errorText: {
     marginTop: 16,
-    color: '#ff7b7b',
+    color: '#000',
     fontFamily: 'CinzelDecorative_400Regular',
   },
   resultCard: {
     marginTop: 24,
     padding: 16,
     borderRadius: 12,
-    backgroundColor: 'rgba(10, 10, 10, 0.6)',
+    backgroundColor: 'transparent',
     borderWidth: 1,
-    borderColor: 'rgba(212, 175, 55, 0.25)',
+    borderColor: '#000',
   },
   resultTitle: {
-    color: '#fff',
+    color: '#000',
     fontFamily: 'CinzelDecorative_700Bold',
     fontSize: 20,
     marginBottom: 12,
   },
   resultRow: {
-    color: '#fff',
+    color: '#000',
     fontFamily: 'CinzelDecorative_400Regular',
     marginBottom: 6,
   },
   resultValue: {
-    color: '#D4AF37',
+    color: '#000',
     fontFamily: 'CinzelDecorative_700Bold',
   },
   coordinates: {
     marginTop: 8,
-    color: '#aaa',
+    color: '#000',
     fontFamily: 'CinzelDecorative_400Regular',
     fontSize: 14,
-  },
-  sceneContainer: {
-    flex: 1,
-    marginTop: 40,
-    minHeight: 400,
   },
 });

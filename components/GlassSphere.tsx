@@ -111,7 +111,7 @@ export default function GlassSphere() {
     context.clearRect(0, 0, canvas.width, canvas.height);
 
     // Set text style
-    context.fillStyle = '#FFFFFF'; // White color
+    context.fillStyle = '#000000'; // Monochrome text
     context.font = 'bold 28px Lancelot, serif';
     context.textAlign = 'center';
     context.textBaseline = 'middle';
@@ -200,7 +200,7 @@ export default function GlassSphere() {
     
     // Simplified glass material for iOS compatibility
     const material = new THREE.MeshStandardMaterial({
-      color: 0x88ccff,
+      color: 0xf5f5f5,
       metalness: 0.1,
       roughness: 0.1,
       transparent: true,
@@ -227,9 +227,9 @@ export default function GlassSphere() {
       // Create radial gradient for soft smoke particle
       const gradient = context.createRadialGradient(64, 64, 0, 64, 64, 64);
       gradient.addColorStop(0, 'rgba(255, 255, 255, 0.8)');
-      gradient.addColorStop(0.3, 'rgba(200, 200, 255, 0.4)');
-      gradient.addColorStop(0.6, 'rgba(150, 150, 255, 0.2)');
-      gradient.addColorStop(1, 'rgba(100, 100, 255, 0)');
+      gradient.addColorStop(0.3, 'rgba(200, 200, 200, 0.4)');
+      gradient.addColorStop(0.6, 'rgba(150, 150, 150, 0.2)');
+      gradient.addColorStop(1, 'rgba(100, 100, 100, 0)');
 
       context.fillStyle = gradient;
       context.fillRect(0, 0, 128, 128);
@@ -265,7 +265,7 @@ export default function GlassSphere() {
       particles.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
       
       const particleMaterial = new THREE.PointsMaterial({
-        color: 0xccddff,
+        color: 0xbfbfbf,
         size: 0.6,
         map: smokeTexture,
         transparent: true,
@@ -335,9 +335,9 @@ export default function GlassSphere() {
         // Create gradient for this layer
         const gradient = context.createRadialGradient(0, 0, 0, 0, 0, outerRadius);
         gradient.addColorStop(0, `rgba(255, 255, 255, ${layerAlpha})`);
-        gradient.addColorStop(0.3, `rgba(255, 215, 0, ${layerAlpha * 0.9})`);
-        gradient.addColorStop(0.6, `rgba(255, 215, 0, ${layerAlpha * 0.5})`);
-        gradient.addColorStop(1, `rgba(255, 215, 0, 0)`);
+        gradient.addColorStop(0.3, `rgba(200, 200, 200, ${layerAlpha * 0.9})`);
+        gradient.addColorStop(0.6, `rgba(150, 150, 150, ${layerAlpha * 0.5})`);
+        gradient.addColorStop(1, `rgba(120, 120, 120, 0)`);
         
         context.fillStyle = gradient;
         context.fill();
@@ -414,7 +414,7 @@ export default function GlassSphere() {
     directionalLight1.position.set(5, 5, 5);
     scene.add(directionalLight1);
 
-    const directionalLight2 = new THREE.DirectionalLight(0x88ccff, 0.5);
+    const directionalLight2 = new THREE.DirectionalLight(0xffffff, 0.5);
     directionalLight2.position.set(-5, -5, -5);
     scene.add(directionalLight2);
 
@@ -572,7 +572,7 @@ export default function GlassSphere() {
       {/* Refresh button for desktop */}
       {Platform.OS === 'web' && (
         <TouchableOpacity style={styles.refreshButton} onPress={getRandomQuote}>
-          <Text style={styles.refreshButtonText}>✨ Reveal New Fortune</Text>
+          <Text style={styles.refreshButtonText}>Neues Orakel anzeigen</Text>
         </TouchableOpacity>
       )}
 
@@ -591,6 +591,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'flex-start',
     alignItems: 'center',
+    backgroundColor: '#fff',
   },
   glView: {
     width: '100%',
@@ -607,25 +608,22 @@ const styles = StyleSheet.create({
   quoteText: {
     fontFamily: 'Lancelot_400Regular',
     fontSize: 22,
-    color: '#FFFFFF',
+    color: '#000',
     textAlign: 'center',
-    textShadowColor: 'rgba(0, 0, 0, 0.8)',
-    textShadowOffset: { width: 0, height: 2 },
-    textShadowRadius: 4,
   },
   refreshButton: {
     marginTop: 20,
-    backgroundColor: 'rgba(212, 175, 55, 0.2)',
+    backgroundColor: '#fff',
     paddingHorizontal: 30,
     paddingVertical: 15,
     borderRadius: 25,
     borderWidth: 2,
-    borderColor: '#D4AF37',
+    borderColor: '#000',
   },
   refreshButtonText: {
     fontFamily: 'Lancelot_400Regular',
     fontSize: 18,
-    color: '#D4AF37',
+    color: '#000',
     textAlign: 'center',
   },
   instructionContainer: {
@@ -635,8 +633,8 @@ const styles = StyleSheet.create({
   instructionText: {
     fontFamily: 'Lancelot_400Regular',
     fontSize: 14,
-    color: '#D4AF37',
+    color: '#000',
     textAlign: 'center',
-    opacity: 0.7,
+    opacity: 0.8,
   },
 });

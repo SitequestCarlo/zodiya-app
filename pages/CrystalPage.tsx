@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, Platform } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 
 interface PageProps {
   title: string;
@@ -19,17 +19,16 @@ export default function CrystalPage({ title }: PageProps) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#fff',
+    paddingHorizontal: 20,
   },
   heading: {
     fontFamily: 'Lancelot_400Regular',
     fontSize: 32,
-    color: '#D4AF37',
+    color: '#000',
     textAlign: 'center',
     marginTop: 60,
     marginBottom: 20,
-    textShadowColor: 'rgba(0, 0, 0, 0.3)',
-    textShadowOffset: { width: 0, height: 2 },
-    textShadowRadius: 4,
   },
   content: {
     flex: 1,
@@ -37,7 +36,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   text: {
-    color: 'white',
+    color: '#000',
     fontSize: 18,
+    textAlign: 'center',
   },
 });

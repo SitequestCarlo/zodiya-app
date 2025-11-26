@@ -55,15 +55,15 @@ export default function ThreeScene() {
     
     // Create materials
     const material = new THREE.MeshPhongMaterial({
-      color: 0x4a90e2,
-      emissive: 0x2d5a8a,
-      specular: 0x80b3ff,
+      color: 0xf5f5f5,
+      emissive: 0x222222,
+      specular: 0xaaaaaa,
       shininess: 30,
       flatShading: true,
     });
 
     const wireframeMaterial = new THREE.LineBasicMaterial({
-      color: 0x00ffff,
+      color: 0x000000,
       linewidth: 2,
     });
 
@@ -78,14 +78,14 @@ export default function ThreeScene() {
     scene.add(mesh);
 
     // Add lights
-    const ambientLight = new THREE.AmbientLight(0x404040, 2);
+    const ambientLight = new THREE.AmbientLight(0x808080, 1.5);
     scene.add(ambientLight);
 
     const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
     directionalLight.position.set(5, 5, 5);
     scene.add(directionalLight);
 
-    const pointLight = new THREE.PointLight(0xff00ff, 0.5);
+    const pointLight = new THREE.PointLight(0xffffff, 0.4);
     pointLight.position.set(-5, -5, 5);
     scene.add(pointLight);
 
@@ -216,6 +216,7 @@ export default function ThreeScene() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#fff',
   },
   glView: {
     flex: 1,
