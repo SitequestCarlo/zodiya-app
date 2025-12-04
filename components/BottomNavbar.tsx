@@ -19,6 +19,7 @@ export default function BottomNavbar({ activeTab, onTabChange }: BottomNavbarPro
   ];
 
   return (
+    <>
     <View style={styles.container}>
       {tabs.map((tab) => {
         const isActive = activeTab === tab.id;
@@ -29,11 +30,11 @@ export default function BottomNavbar({ activeTab, onTabChange }: BottomNavbarPro
             onPress={() => onTabChange(tab.id)}
             activeOpacity={0.7}
           >
-            <View style={[styles.iconCircle, isActive && styles.activeIconCircle]}>
+            <View style={styles.iconContainer}>
               <tab.Icon
-                width={32}
-                height={32}
-                color={isActive ? '#fff' : '#7a7a7a'}
+                width={28}
+                height={28}
+                color={isActive ? '#000' : '#7a7a7a'}
               />
             </View>
             <Text style={[styles.label, isActive && styles.activeLabel]}>
@@ -43,6 +44,7 @@ export default function BottomNavbar({ activeTab, onTabChange }: BottomNavbarPro
         );
       })}
     </View>
+    </>
   );
 }
 
@@ -58,9 +60,9 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     paddingBottom: 20,
     paddingHorizontal: 24,
-    backgroundColor: '#fff',
-    borderTopWidth: 1,
-    borderColor: '#000',
+    backgroundColor: '#f4f4f4',
+    borderTopLeftRadius: 24,
+    borderTopRightRadius: 24
   },
   button: {
     flex: 1,
@@ -68,16 +70,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     gap: 6,
   },
-  iconCircle: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
-    backgroundColor: '#fff',
+  iconContainer: {
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  activeIconCircle: {
-    backgroundColor: '#000',
   },
   label: {
     fontSize: 11,
