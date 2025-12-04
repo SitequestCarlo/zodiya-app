@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+
 import Svg, { Path } from 'react-native-svg';
 import {
   DateStep,
@@ -290,8 +291,8 @@ export default function ChartPage({ title }: PageProps) {
         </View>
 
         {/* Center content section */}
-        <View style={styles.centerSection}>
-          <View style={styles.formCard}>
+        <View style={[styles.centerSection, currentStep === 'result' && styles.centerSectionResult]}>
+          <View style={[styles.formCard, currentStep === 'result' && styles.formCardResult]}>
             {currentStep === 'date' && (
               <DateStep
                 selectedDay={selectedDay}
@@ -387,10 +388,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingHorizontal: 20,
   },
+  centerSectionResult: {
+    justifyContent: 'flex-start',
+  },
   bottomSection: {
     paddingHorizontal: 20,
     paddingBottom: 100,
-    paddingTop: 20,
+    paddingTop: 10
   },
   heading: {
     fontFamily: Platform.select({
@@ -445,15 +449,17 @@ const styles = StyleSheet.create({
   },
   formCard: {
     backgroundColor: 'transparent',
-    borderRadius: 16,
-    padding: 20,
     alignItems: 'center',
+  },
+  formCardResult: {
+    flex: 1,
+    width: '100%',
   },
   buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 24,
+    marginTop: 2,
     gap: 12,
   },
   backButton: {

@@ -1,5 +1,6 @@
 import React from 'react';
-import { Platform, StyleSheet, Text, View } from 'react-native';
+import { Platform, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ZodiacIconMap, ZodiacGermanNames, ZodiacDescriptions } from './ZodiacIcons';
 
 export interface NatalSummary {
   sunSign: string;
@@ -16,6 +17,33 @@ interface ResultStepProps {
   placeName: string;
 }
 
+interface ZodiacResultCardProps {
+  label: string;
+  sign: string;
+}
+
+const ZodiacResultCard = ({ label, sign }: ZodiacResultCardProps) => {
+  const Icon = ZodiacIconMap[sign];
+  const germanName = ZodiacGermanNames[sign] || sign;
+  const description = ZodiacDescriptions[sign] || '';
+
+  return (
+    <View style={styles.zodiacCard}>
+      <Text style={styles.zodiacLabel}>{label}</Text>
+      <View style={styles.zodiacContent}>
+        {Icon && <Icon size={40} color="#000" />}
+        <View style={styles.zodiacNames}>
+          <Text style={styles.germanName}>{germanName}</Text>
+          <Text style={styles.latinName}>{sign}</Text>
+        </View>
+      </View>
+      {description && (
+        <Text style={styles.zodiacDescription}>„{description}"</Text>
+      )}
+    </View>
+  );
+};
+
 export default function ResultStep({
   summary,
   formattedDate,
@@ -25,7 +53,7 @@ export default function ResultStep({
   const formattedCoordinates = `${summary.latitude.toFixed(2)}°, ${summary.longitude.toFixed(2)}°`;
 
   return (
-    <View style={styles.resultContainer}>
+    <ScrollView style={styles.resultContainer} showsVerticalScrollIndicator={false}>
       <View style={styles.resultCard}>
         <Text style={styles.resultRow}>
           <Text style={styles.resultLabel}>Geburtsdatum: </Text>
@@ -39,24 +67,16 @@ export default function ResultStep({
           <Text style={styles.resultLabel}>Geburtsort: </Text>
           <Text style={styles.resultValue}>{placeName}</Text>
         </Text>
+        <Text style={styles.resultRow}>
+          <Text style={styles.resultLabel}>Koordinaten: </Text>
+          <Text style={styles.resultValue}>{formattedCoordinates}</Text>
+        </Text>
       </View>
       
-      <View style={styles.resultCard}>
-        <Text style={styles.resultRow}>
-          <Text style={styles.resultLabel}>Sonnenzeichen: </Text>
-          <Text style={styles.resultValue}>{summary.sunSign}</Text>
-        </Text>
-        <Text style={styles.resultRow}>
-          <Text style={styles.resultLabel}>Mondzeichen: </Text>
-          <Text style={styles.resultValue}>{summary.moonSign}</Text>
-        </Text>
-        <Text style={styles.resultRow}>
-          <Text style={styles.resultLabel}>Aszendent: </Text>
-          <Text style={styles.resultValue}>{summary.ascendant}</Text>
-        </Text>
-        <Text style={styles.coordinates}>Koordinaten: {formattedCoordinates}</Text>
-      </View>
-    </View>
+      <ZodiacResultCard label="Sonnenzeichen" sign={summary.sunSign} />
+      <ZodiacResultCard label="Mondzeichen" sign={summary.moonSign} />
+      <ZodiacResultCard label="Aszendent" sign={summary.ascendant} />
+    </ScrollView>
   );
 }
 
@@ -68,9 +88,51 @@ const styles = StyleSheet.create({
     padding: 16,
     borderRadius: 12,
     backgroundColor: 'transparent',
-    borderWidth: 1,
-    borderColor: '#000',
     marginBottom: 12,
+  },
+  zodiacCard: {
+    padding: 16,
+    borderRadius: 12,
+    backgroundColor: 'transparent',
+    marginBottom: 12,
+  },
+  zodiacLabel: {
+    fontFamily: Platform.select({
+      web: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+      default: 'CinzelDecorative_400Regular',
+    }),
+    fontSize: 12,
+    color: '#666',
+    marginBottom: 8,
+  },
+  zodiacContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+  },
+  zodiacNames: {
+    flexDirection: 'column',
+  },
+  germanName: {
+    fontFamily: 'Lancelot_400Regular',
+    fontSize: 14,
+    color: '#666',
+  },
+  latinName: {
+    fontFamily: 'Lancelot_400Regular',
+    fontSize: 24,
+    color: '#000',
+  },
+  zodiacDescription: {
+    fontFamily: Platform.select({
+      web: 'Georgia, serif',
+      default: 'CinzelDecorative_400Regular',
+    }),
+    fontSize: 14,
+    color: '#555',
+    fontStyle: 'italic',
+    marginTop: 12,
+    lineHeight: 22,
   },
   resultLabel: {
     fontFamily: Platform.select({
