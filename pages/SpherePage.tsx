@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Platform } from 'react-native';
 import GlassSphere from '../components/GlassSphere';
 
 interface PageProps {
@@ -22,7 +22,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   heading: {
-    fontFamily: 'Lancelot_400Regular',
+    fontFamily: Platform.select({
+      web: 'Georgia, serif',
+      default: 'Lancelot_400Regular',
+    }),
     fontSize: 32,
     color: '#000',
     textAlign: 'center',

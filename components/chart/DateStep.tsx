@@ -1,6 +1,6 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import WheelPicker from 'react-native-wheely';
+import { Platform, StyleSheet, Text, View } from 'react-native';
+import CustomWheelPicker from './CustomWheelPicker';
 
 // Generate picker options
 const DAYS = Array.from({ length: 31 }, (_, i) => String(i + 1).padStart(2, '0'));
@@ -35,7 +35,7 @@ export default function DateStep({
       <View style={styles.datePickerRow}>
         <View style={styles.pickerWrapperSmall}>
           <Text style={styles.pickerLabel}>Tag</Text>
-          <WheelPicker
+          <CustomWheelPicker
             selectedIndex={selectedDay}
             options={DAYS}
             onChange={onDayChange}
@@ -49,7 +49,7 @@ export default function DateStep({
         </View>
         <View style={styles.pickerWrapperMonth}>
           <Text style={styles.pickerLabel}>Monat</Text>
-          <WheelPicker
+          <CustomWheelPicker
             selectedIndex={selectedMonth}
             options={MONTHS}
             onChange={onMonthChange}
@@ -63,7 +63,7 @@ export default function DateStep({
         </View>
         <View style={styles.pickerWrapperSmall}>
           <Text style={styles.pickerLabel}>Jahr</Text>
-          <WheelPicker
+          <CustomWheelPicker
             selectedIndex={selectedYear}
             options={YEARS}
             onChange={onYearChange}
@@ -101,7 +101,10 @@ const styles = StyleSheet.create({
     marginHorizontal: 4,
   },
   pickerLabel: {
-    fontFamily: 'CinzelDecorative_400Regular',
+    fontFamily: Platform.select({
+      web: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+      default: 'CinzelDecorative_400Regular',
+    }),
     fontSize: 12,
     color: '#666',
     marginBottom: 8,
@@ -111,7 +114,10 @@ const styles = StyleSheet.create({
     height: 250,
   },
   wheelText: {
-    fontFamily: 'CinzelDecorative_400Regular',
+    fontFamily: Platform.select({
+      web: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+      default: 'CinzelDecorative_400Regular',
+    }),
     fontSize: 18,
     color: '#000',
   },

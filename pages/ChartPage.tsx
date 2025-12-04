@@ -393,7 +393,10 @@ const styles = StyleSheet.create({
     paddingTop: 20,
   },
   heading: {
-    fontFamily: 'Lancelot_400Regular',
+    fontFamily: Platform.select({
+      web: 'Georgia, serif',
+      default: 'Lancelot_400Regular',
+    }),
     fontSize: 32,
     color: '#000',
     textAlign: 'center',
@@ -431,7 +434,10 @@ const styles = StyleSheet.create({
     marginHorizontal: 4,
   },
   stepTitle: {
-    fontFamily: 'CinzelDecorative_400Regular',
+    fontFamily: Platform.select({
+      web: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+      default: 'CinzelDecorative_400Regular',
+    }),
     fontSize: 18,
     color: '#000',
     textAlign: 'center',
@@ -459,7 +465,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   backButtonText: {
-    fontFamily: 'CinzelDecorative_400Regular',
+    fontFamily: Platform.select({
+      web: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+      default: 'CinzelDecorative_400Regular',
+    }),
     fontSize: 16,
     color: '#000',
   },
@@ -470,11 +479,16 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     backgroundColor: '#000',
     alignItems: 'center',
+    maxWidth: 320
   },
   continueButtonText: {
-    fontFamily: 'CinzelDecorative_700Bold',
+    fontFamily: Platform.select({
+      web: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+      default: 'CinzelDecorative_700Bold',
+    }),
     fontSize: 16,
     color: '#fff',
+    fontWeight: Platform.select({ web: '600', default: undefined }),
   },
   buttonDisabled: {
     opacity: 0.6,
@@ -482,7 +496,10 @@ const styles = StyleSheet.create({
   errorText: {
     marginTop: 16,
     color: '#c00',
-    fontFamily: 'CinzelDecorative_400Regular',
+    fontFamily: Platform.select({
+      web: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+      default: 'CinzelDecorative_400Regular',
+    }),
     textAlign: 'center',
   },
 });

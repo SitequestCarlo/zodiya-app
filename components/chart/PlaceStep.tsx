@@ -2,6 +2,7 @@ import React from 'react';
 import {
   ActivityIndicator,
   FlatList,
+  Platform,
   StyleSheet,
   Text,
   TextInput,
@@ -93,7 +94,10 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     color: '#000',
     fontSize: 16,
-    fontFamily: 'CinzelDecorative_400Regular',
+    fontFamily: Platform.select({
+      web: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+      default: 'CinzelDecorative_400Regular',
+    }),
   },
   searchingContainer: {
     flexDirection: 'row',
@@ -101,7 +105,10 @@ const styles = StyleSheet.create({
     marginTop: 12,
   },
   searchingText: {
-    fontFamily: 'CinzelDecorative_400Regular',
+    fontFamily: Platform.select({
+      web: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+      default: 'CinzelDecorative_400Regular',
+    }),
     fontSize: 14,
     color: '#666',
     marginLeft: 8,
@@ -120,7 +127,10 @@ const styles = StyleSheet.create({
     borderBottomColor: '#eee',
   },
   suggestionText: {
-    fontFamily: 'CinzelDecorative_400Regular',
+    fontFamily: Platform.select({
+      web: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+      default: 'CinzelDecorative_400Regular',
+    }),
     fontSize: 14,
     color: '#000',
   },
@@ -131,13 +141,20 @@ const styles = StyleSheet.create({
     borderRadius: 12,
   },
   selectedPlaceLabel: {
-    fontFamily: 'CinzelDecorative_700Bold',
+    fontFamily: Platform.select({
+      web: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+      default: 'CinzelDecorative_700Bold',
+    }),
     fontSize: 12,
     color: '#666',
     marginBottom: 4,
+    fontWeight: Platform.select({ web: '600', default: undefined }),
   },
   selectedPlaceText: {
-    fontFamily: 'CinzelDecorative_400Regular',
+    fontFamily: Platform.select({
+      web: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+      default: 'CinzelDecorative_400Regular',
+    }),
     fontSize: 14,
     color: '#000',
   },

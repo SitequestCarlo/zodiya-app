@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, TouchableOpacity, StyleSheet, Text } from 'react-native';
+import { View, TouchableOpacity, StyleSheet, Text, Platform } from 'react-native';
 import ChartIcon from './icons/ChartIcon';
 import CrystalIcon from './icons/CrystalIcon';
 import GlassSphereIcon from './icons/GlassSphereIcon';
@@ -78,6 +78,10 @@ const styles = StyleSheet.create({
     fontSize: 11,
     color: '#7a7a7a',
     fontWeight: '500',
+    fontFamily: Platform.select({
+      web: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+      default: undefined,
+    }),
   },
   activeLabel: {
     color: '#000',

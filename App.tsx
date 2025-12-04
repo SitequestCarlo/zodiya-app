@@ -87,6 +87,9 @@ const styles = StyleSheet.create({
   },
   pageContainer: {
     flex: 1,
+    maxWidth: 400,
+    width: '100%',
+    marginHorizontal: 'auto',
   },
   centerContent: {
     justifyContent: 'center',

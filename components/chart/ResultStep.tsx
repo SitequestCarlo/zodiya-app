@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { Platform, StyleSheet, Text, View } from 'react-native';
 
 export interface NatalSummary {
   sunSign: string;
@@ -73,22 +73,35 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   resultLabel: {
-    fontFamily: 'CinzelDecorative_400Regular',
+    fontFamily: Platform.select({
+      web: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+      default: 'CinzelDecorative_400Regular',
+    }),
     color: '#666',
   },
   resultRow: {
     color: '#000',
-    fontFamily: 'CinzelDecorative_400Regular',
+    fontFamily: Platform.select({
+      web: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+      default: 'CinzelDecorative_400Regular',
+    }),
     marginBottom: 6,
   },
   resultValue: {
     color: '#000',
-    fontFamily: 'CinzelDecorative_700Bold',
+    fontFamily: Platform.select({
+      web: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+      default: 'CinzelDecorative_700Bold',
+    }),
+    fontWeight: Platform.select({ web: '600', default: undefined }),
   },
   coordinates: {
     marginTop: 8,
     color: '#666',
-    fontFamily: 'CinzelDecorative_400Regular',
+    fontFamily: Platform.select({
+      web: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+      default: 'CinzelDecorative_400Regular',
+    }),
     fontSize: 14,
   },
 });

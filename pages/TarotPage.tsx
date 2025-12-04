@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Platform } from 'react-native';
 
 interface PageProps {
   title: string;
@@ -23,7 +23,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   heading: {
-    fontFamily: 'Lancelot_400Regular',
+    fontFamily: Platform.select({
+      web: 'Georgia, serif',
+      default: 'Lancelot_400Regular',
+    }),
     fontSize: 32,
     color: '#000',
     textAlign: 'center',
@@ -39,5 +42,9 @@ const styles = StyleSheet.create({
     color: '#000',
     fontSize: 18,
     textAlign: 'center',
+    fontFamily: Platform.select({
+      web: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+      default: undefined,
+    }),
   },
 });
