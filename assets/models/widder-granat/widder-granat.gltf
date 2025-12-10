@@ -1,0 +1,163 @@
+{
+  "asset": {
+    "generator": "glTF-Transform v4.2.1",
+    "version": "2.0",
+    "extras": {
+      "author": "Dipartimento di Scienze della Terra - UniTo (https://sketchfab.com/DstUniTo)",
+      "license": "CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)",
+      "source": "https://sketchfab.com/3d-models/mr64-anfibolite-listata-diopsidico-granatifera-3c44bb6f32774ed49fb53c96a16bd8c2",
+      "title": "MR64 - Anfibolite listata diopsidico granatifera"
+    }
+  },
+  "accessors": [
+    {
+      "type": "SCALAR",
+      "componentType": 5125,
+      "count": 1002018,
+      "bufferView": 0,
+      "byteOffset": 0
+    },
+    {
+      "type": "VEC3",
+      "componentType": 5126,
+      "count": 220039,
+      "bufferView": 1,
+      "byteOffset": 0
+    },
+    {
+      "type": "VEC3",
+      "componentType": 5126,
+      "count": 220039,
+      "max": [
+        0.6868495941162109,
+        1,
+        0.5520798563957214
+      ],
+      "min": [
+        -0.6868495941162109,
+        -1,
+        -0.5520798563957214
+      ],
+      "bufferView": 1,
+      "byteOffset": 12
+    },
+    {
+      "type": "VEC2",
+      "componentType": 5126,
+      "count": 220039,
+      "bufferView": 1,
+      "byteOffset": 24
+    }
+  ],
+  "bufferViews": [
+    {
+      "buffer": 0,
+      "byteOffset": 0,
+      "byteLength": 4008072,
+      "target": 34963
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 4008072,
+      "byteLength": 7041248,
+      "byteStride": 32,
+      "target": 34962
+    }
+  ],
+  "samplers": [
+    {
+      "magFilter": 9729,
+      "minFilter": 9987,
+      "wrapS": 10497,
+      "wrapT": 10497
+    }
+  ],
+  "textures": [
+    {
+      "sampler": 0,
+      "extensions": {
+        "EXT_texture_webp": {
+          "source": 0
+        }
+      }
+    }
+  ],
+  "images": [
+    {
+      "mimeType": "image/webp",
+      "uri": "baseColor.webp"
+    }
+  ],
+  "buffers": [
+    {
+      "uri": "widder-granat.bin",
+      "byteLength": 11049320
+    }
+  ],
+  "materials": [
+    {
+      "name": "MR64",
+      "doubleSided": true,
+      "pbrMetallicRoughness": {
+        "metallicFactor": 0,
+        "baseColorTexture": {
+          "index": 0
+        }
+      }
+    }
+  ],
+  "meshes": [
+    {
+      "name": "Object_0",
+      "primitives": [
+        {
+          "attributes": {
+            "NORMAL": 1,
+            "POSITION": 2,
+            "TEXCOORD_0": 3
+          },
+          "mode": 4,
+          "material": 0,
+          "indices": 0
+        }
+      ]
+    }
+  ],
+  "nodes": [
+    {
+      "name": "Object_2",
+      "translation": [
+        16.065285552806543,
+        -0.809178054935589,
+        -0.3372332426658232
+      ],
+      "rotation": [
+        -0.13504849288796766,
+        0.16075907367733014,
+        0.6739502000050047,
+        0.7083145859797979
+      ],
+      "scale": [
+        0.9891247961607484,
+        0.989124756507773,
+        0.9891247871996148
+      ],
+      "mesh": 0
+    }
+  ],
+  "scenes": [
+    {
+      "name": "Sketchfab_Scene",
+      "nodes": [
+        0
+      ]
+    }
+  ],
+  "scene": 0,
+  "extensionsUsed": [
+    "EXT_texture_webp"
+  ],
+  "extensionsRequired": [
+    "EXT_texture_webp"
+  ]
+}

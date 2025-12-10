@@ -1,0 +1,355 @@
+{
+  "asset": {
+    "generator": "glTF-Transform v4.2.1",
+    "version": "2.0",
+    "extras": {
+      "author": "Ecole Nationale Supérieure de Géologie (https://sketchfab.com/ENSGeologie)",
+      "license": "CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)",
+      "source": "https://sketchfab.com/3d-models/ambre-dominicaine-b550f31eec9b445488154ce5b712ad5d",
+      "title": "Ambre dominicaine"
+    }
+  },
+  "accessors": [
+    {
+      "type": "SCALAR",
+      "componentType": 5123,
+      "count": 159645,
+      "bufferView": 0,
+      "byteOffset": 0
+    },
+    {
+      "type": "SCALAR",
+      "componentType": 5123,
+      "count": 158013,
+      "bufferView": 0,
+      "byteOffset": 319292
+    },
+    {
+      "type": "SCALAR",
+      "componentType": 5123,
+      "count": 128829,
+      "bufferView": 0,
+      "byteOffset": 635320
+    },
+    {
+      "type": "VEC3",
+      "componentType": 5126,
+      "count": 27262,
+      "max": [
+        1,
+        0.7589038014411926,
+        0.8521683216094971
+      ],
+      "min": [
+        -1,
+        -0.7589038014411926,
+        -0.8521683216094971
+      ],
+      "bufferView": 1,
+      "byteOffset": 0
+    },
+    {
+      "type": "VEC2",
+      "componentType": 5126,
+      "count": 27262,
+      "bufferView": 1,
+      "byteOffset": 12
+    },
+    {
+      "type": "VEC3",
+      "componentType": 5126,
+      "count": 26836,
+      "max": [
+        0.7579271793365479,
+        0.731162428855896,
+        1
+      ],
+      "min": [
+        -0.7579271793365479,
+        -0.731162428855896,
+        -1
+      ],
+      "bufferView": 2,
+      "byteOffset": 0
+    },
+    {
+      "type": "VEC2",
+      "componentType": 5126,
+      "count": 26836,
+      "bufferView": 2,
+      "byteOffset": 12
+    },
+    {
+      "type": "VEC3",
+      "componentType": 5126,
+      "count": 22058,
+      "max": [
+        0.9578844308853149,
+        1,
+        0.8391064405441284
+      ],
+      "min": [
+        -0.9578844308853149,
+        -1,
+        -0.8391064405441284
+      ],
+      "bufferView": 3,
+      "byteOffset": 0
+    },
+    {
+      "type": "VEC2",
+      "componentType": 5126,
+      "count": 22058,
+      "bufferView": 3,
+      "byteOffset": 12
+    }
+  ],
+  "bufferViews": [
+    {
+      "buffer": 0,
+      "byteOffset": 0,
+      "byteLength": 892980,
+      "target": 34963
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 892980,
+      "byteLength": 545240,
+      "byteStride": 20,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 1438220,
+      "byteLength": 536720,
+      "byteStride": 20,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 1974940,
+      "byteLength": 441160,
+      "byteStride": 20,
+      "target": 34962
+    }
+  ],
+  "samplers": [
+    {
+      "magFilter": 9729,
+      "minFilter": 9987,
+      "wrapS": 10497,
+      "wrapT": 10497
+    }
+  ],
+  "textures": [
+    {
+      "sampler": 0,
+      "extensions": {
+        "EXT_texture_webp": {
+          "source": 0
+        }
+      }
+    },
+    {
+      "sampler": 0,
+      "extensions": {
+        "EXT_texture_webp": {
+          "source": 1
+        }
+      }
+    },
+    {
+      "sampler": 0,
+      "extensions": {
+        "EXT_texture_webp": {
+          "source": 2
+        }
+      }
+    }
+  ],
+  "images": [
+    {
+      "mimeType": "image/webp",
+      "uri": "baseColor_1.webp"
+    },
+    {
+      "mimeType": "image/webp",
+      "uri": "baseColor_2.webp"
+    },
+    {
+      "mimeType": "image/webp",
+      "uri": "baseColor_3.webp"
+    }
+  ],
+  "buffers": [
+    {
+      "uri": "loewe-bernstein.bin",
+      "byteLength": 2416100
+    }
+  ],
+  "materials": [
+    {
+      "name": "material2",
+      "doubleSided": true,
+      "pbrMetallicRoughness": {
+        "metallicFactor": 0,
+        "baseColorTexture": {
+          "index": 0
+        }
+      },
+      "extensions": {
+        "KHR_materials_unlit": {}
+      }
+    },
+    {
+      "name": "material1",
+      "doubleSided": true,
+      "pbrMetallicRoughness": {
+        "metallicFactor": 0,
+        "baseColorTexture": {
+          "index": 1
+        }
+      },
+      "extensions": {
+        "KHR_materials_unlit": {}
+      }
+    },
+    {
+      "name": "material0",
+      "doubleSided": true,
+      "pbrMetallicRoughness": {
+        "metallicFactor": 0,
+        "baseColorTexture": {
+          "index": 2
+        }
+      },
+      "extensions": {
+        "KHR_materials_unlit": {}
+      }
+    }
+  ],
+  "meshes": [
+    {
+      "name": "Model_material2_0",
+      "primitives": [
+        {
+          "attributes": {
+            "POSITION": 3,
+            "TEXCOORD_0": 4
+          },
+          "mode": 4,
+          "material": 0,
+          "indices": 0
+        }
+      ]
+    },
+    {
+      "name": "Model_material1_0",
+      "primitives": [
+        {
+          "attributes": {
+            "POSITION": 5,
+            "TEXCOORD_0": 6
+          },
+          "mode": 4,
+          "material": 1,
+          "indices": 1
+        }
+      ]
+    },
+    {
+      "name": "Model_material0_0",
+      "primitives": [
+        {
+          "attributes": {
+            "POSITION": 7,
+            "TEXCOORD_0": 8
+          },
+          "mode": 4,
+          "material": 2,
+          "indices": 2
+        }
+      ]
+    }
+  ],
+  "nodes": [
+    {
+      "name": "Model_material2_0",
+      "translation": [
+        0.0550704194618543,
+        -0.002001864502346934,
+        -0.10300299525260927
+      ],
+      "rotation": [
+        0.6600330201927732,
+        0.25368565638444435,
+        0.25368565638444435,
+        0.660033020192773
+      ],
+      "scale": [
+        0.8755631248343241,
+        0.8755631446838379,
+        0.8755631248343241
+      ],
+      "mesh": 0
+    },
+    {
+      "name": "Model_material1_0",
+      "translation": [
+        -0.15249865947781593,
+        -0.03949740974488589,
+        -0.1075732409954071
+      ],
+      "rotation": [
+        0.6600330201927732,
+        0.25368565638444435,
+        0.25368565638444435,
+        0.660033020192773
+      ],
+      "scale": [
+        0.9025684688513853,
+        0.9025684893131256,
+        0.9025684688513853
+      ],
+      "mesh": 1
+    },
+    {
+      "name": "Model_material0_0",
+      "translation": [
+        -0.20470532627674398,
+        0.1426400730025552,
+        -0.10332769155502314
+      ],
+      "rotation": [
+        0.6600330201927732,
+        0.25368565638444435,
+        0.25368565638444435,
+        0.660033020192773
+      ],
+      "scale": [
+        0.6641602961651849,
+        0.6641603112220764,
+        0.6641602961651849
+      ],
+      "mesh": 2
+    }
+  ],
+  "scenes": [
+    {
+      "name": "Sketchfab_Scene",
+      "nodes": [
+        0,
+        1,
+        2
+      ]
+    }
+  ],
+  "scene": 0,
+  "extensionsUsed": [
+    "EXT_texture_webp",
+    "KHR_materials_unlit"
+  ],
+  "extensionsRequired": [
+    "EXT_texture_webp"
+  ]
+}

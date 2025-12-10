@@ -1,0 +1,159 @@
+{
+  "asset": {
+    "generator": "glTF-Transform v4.2.1",
+    "version": "2.0",
+    "extras": {
+      "author": "Prirodoslovni muzej Slovenije (https://sketchfab.com/Prirodoslovni_muzej_Slovenije)",
+      "license": "CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)",
+      "source": "https://sketchfab.com/3d-models/turkiz-5bfa98b2351c4f07b8a465c3ab340cf7",
+      "title": "Turkiz"
+    }
+  },
+  "accessors": [
+    {
+      "type": "SCALAR",
+      "componentType": 5125,
+      "count": 239301,
+      "bufferView": 0,
+      "byteOffset": 0
+    },
+    {
+      "type": "VEC3",
+      "componentType": 5126,
+      "count": 68146,
+      "max": [
+        1,
+        0.7118747234344482,
+        0.8277535438537598
+      ],
+      "min": [
+        -1,
+        -0.7118747234344482,
+        -0.8277535438537598
+      ],
+      "bufferView": 1,
+      "byteOffset": 0
+    },
+    {
+      "type": "VEC2",
+      "componentType": 5126,
+      "count": 68146,
+      "bufferView": 1,
+      "byteOffset": 12
+    }
+  ],
+  "bufferViews": [
+    {
+      "buffer": 0,
+      "byteOffset": 0,
+      "byteLength": 957204,
+      "target": 34963
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 957204,
+      "byteLength": 1362920,
+      "byteStride": 20,
+      "target": 34962
+    }
+  ],
+  "samplers": [
+    {
+      "magFilter": 9729,
+      "minFilter": 9987,
+      "wrapS": 10497,
+      "wrapT": 10497
+    }
+  ],
+  "textures": [
+    {
+      "sampler": 0,
+      "extensions": {
+        "EXT_texture_webp": {
+          "source": 0
+        }
+      }
+    }
+  ],
+  "images": [
+    {
+      "mimeType": "image/webp",
+      "uri": "baseColor.webp"
+    }
+  ],
+  "buffers": [
+    {
+      "uri": "schuetze-tuerkis.bin",
+      "byteLength": 2320124
+    }
+  ],
+  "materials": [
+    {
+      "name": "Turkiz",
+      "doubleSided": true,
+      "pbrMetallicRoughness": {
+        "metallicFactor": 0,
+        "baseColorTexture": {
+          "index": 0
+        }
+      },
+      "extensions": {
+        "KHR_materials_unlit": {}
+      }
+    }
+  ],
+  "meshes": [
+    {
+      "name": "Object_0",
+      "primitives": [
+        {
+          "attributes": {
+            "POSITION": 1,
+            "TEXCOORD_0": 2
+          },
+          "mode": 4,
+          "material": 0,
+          "indices": 0
+        }
+      ]
+    }
+  ],
+  "nodes": [
+    {
+      "name": "Object_2",
+      "translation": [
+        0.15410055358892658,
+        6.902251913578874,
+        0.8945169724100859
+      ],
+      "rotation": [
+        0.993838560225008,
+        -0.005955179042722632,
+        -0.08775379262441303,
+        -0.06744422831112917
+      ],
+      "scale": [
+        1.3906644799246104,
+        1.390664504667266,
+        1.3906645501622168
+      ],
+      "mesh": 0
+    }
+  ],
+  "scenes": [
+    {
+      "name": "Sketchfab_Scene",
+      "nodes": [
+        0
+      ]
+    }
+  ],
+  "scene": 0,
+  "extensionsUsed": [
+    "EXT_texture_webp",
+    "KHR_materials_unlit"
+  ],
+  "extensionsRequired": [
+    "EXT_texture_webp"
+  ]
+}
