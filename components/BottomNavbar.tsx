@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, TouchableOpacity, StyleSheet, Text, Platform } from 'react-native';
+import HomeIcon from './icons/HomeIcon';
 import ChartIcon from './icons/ChartIcon';
 import CrystalIcon from './icons/CrystalIcon';
 import GlassSphereIcon from './icons/GlassSphereIcon';
@@ -12,10 +13,11 @@ interface BottomNavbarProps {
 
 export default function BottomNavbar({ activeTab, onTabChange }: BottomNavbarProps) {
   const tabs = [
-    { id: 0, Icon: ChartIcon, name: 'Horoskop' },
-    { id: 1, Icon: CrystalIcon, name: 'Kristalle' },
-    { id: 2, Icon: GlassSphereIcon, name: 'Orakel' },
-    { id: 3, Icon: TarotIcon, name: 'Tarot' },
+    { id: 1, Icon: ChartIcon, name: 'Horoskop' },
+    { id: 2, Icon: CrystalIcon, name: 'Kristall' },
+    { id: 0, Icon: HomeIcon, name: 'Home' },
+    { id: 3, Icon: GlassSphereIcon, name: 'Orakel' },
+    { id: 4, Icon: TarotIcon, name: 'Tarot' },
   ];
 
   return (

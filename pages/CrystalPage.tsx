@@ -1,14 +1,18 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { View, Text, StyleSheet, Platform, FlatList, TouchableOpacity, Dimensions, Animated, Easing, ScrollView } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Svg, { Path } from 'react-native-svg';
 import { GLView, ExpoWebGLRenderingContext } from 'expo-gl';
 import { Renderer, loadAsync } from 'expo-three';
 import * as THREE from 'three';
 import { Asset } from 'expo-asset';
 import { GLTFLoader } from 'three-stdlib';
+import type { StoredUserData } from '../utils/storage';
 
 interface PageProps {
   title: string;
+  userData?: StoredUserData;
+  onResetData?: () => void;
 }
 
 // Animated loading moon component
@@ -257,157 +261,152 @@ function CrystalViewer({ crystal }: { crystal: Crystal }) {
     rightLight.position.set(5, 0, 0);
     scene.add(rightLight);
 
-    // Load GLB model
-    console.log('[CrystalViewer] Starting to load model for:', crystal.name);
-    try {
-      // Download model and texture assets
-      const modelAsset = Asset.fromModule(crystal.model);
-      const textureAsset = Asset.fromModule(crystal.texture);
-      
-      await Promise.all([
-        modelAsset.downloadAsync(),
-        textureAsset.downloadAsync()
-      ]);
-      
-      console.log('[CrystalViewer] Assets downloaded');
-      console.log('[CrystalViewer] Model URI:', modelAsset.localUri);
-      console.log('[CrystalViewer] Texture URI:', textureAsset.localUri);
-      
-      // Load texture via expo-three
-      let texture: THREE.Texture | null = null;
-      try {
-        texture = await loadAsync(textureAsset) as THREE.Texture;
-        if (texture) {
-          texture.flipY = false;
-          texture.colorSpace = THREE.SRGBColorSpace;
-          texture.needsUpdate = true;
-          console.log('[CrystalViewer] Texture loaded successfully');
-        }
-      } catch (texError) {
-        console.log('[CrystalViewer] Could not load texture:', texError);
-      }
-      
-      // Load GLB file using fetch + GLTFLoader.parse
-      let model: THREE.Object3D | null = null;
-      
-      try {
-        console.log('[CrystalViewer] Fetching GLB file...');
-        const response = await fetch(modelAsset.localUri!);
-        const arrayBuffer = await response.arrayBuffer();
-        console.log('[CrystalViewer] GLB fetched, size:', arrayBuffer.byteLength);
-        
-        const loader = new GLTFLoader();
-        const gltf = await new Promise<{ scene: THREE.Group }>((resolve, reject) => {
-          loader.parse(
-            arrayBuffer,
-            '',
-            (result) => {
-              console.log('[CrystalViewer] GLTFLoader.parse success');
-              resolve(result);
-            },
-            (error) => {
-              console.error('[CrystalViewer] GLTFLoader.parse error:', error);
-              reject(error);
-            }
-          );
-        });
-        
-        model = gltf.scene;
-        console.log('[CrystalViewer] Model loaded from GLB');
-        
-        // Replace all materials with our own using the separately loaded texture
-        // This bypasses the blob texture loading issue in React Native
-        model.traverse((child: any) => {
-          if (child.isMesh) {
-            const newMaterial = new THREE.MeshStandardMaterial({
-              color: 0xffffff,
-              metalness: 0.2,
-              roughness: 0.5,
-              side: THREE.DoubleSide,
-            });
-            if (texture) {
-              newMaterial.map = texture;
-            }
-            child.material = newMaterial;
-          }
-        });
-        console.log('[CrystalViewer] Applied texture to model meshes');
-      } catch (glbError) {
-        console.error('[CrystalViewer] GLB loading failed:', glbError);
-      }
-      
-      // Fallback to octahedron if GLB failed
-      if (!model) {
-        console.log('[CrystalViewer] Using fallback geometry');
-        const geometry = new THREE.OctahedronGeometry(1, 0);
-        const material = new THREE.MeshStandardMaterial({
-          color: texture ? 0xffffff : 0xff69b4,
-          metalness: 0.3,
-          roughness: 0.4,
-          transparent: true,
-          opacity: 0.95,
-          side: THREE.DoubleSide,
-        });
-        if (texture) {
-          material.map = texture;
-        }
-        model = new THREE.Mesh(geometry, material);
-      }
-      
-      // Center and scale the model
-      // First, get initial bounding box
-      const box = new THREE.Box3().setFromObject(model);
-      const size = box.getSize(new THREE.Vector3());
-      console.log('[CrystalViewer] Model size:', size);
-      const maxDim = Math.max(size.x, size.y, size.z);
-      const scale = maxDim > 0 ? 2 / maxDim : 1;
-      console.log('[CrystalViewer] Scale:', scale);
-      
-      // Apply scale first
-      model.scale.setScalar(scale);
-      model.updateMatrixWorld(true);
-      
-      // Recalculate bounding box after scaling
-      const scaledBox = new THREE.Box3().setFromObject(model);
-      const center = scaledBox.getCenter(new THREE.Vector3());
-      console.log('[CrystalViewer] Center after scale:', center);
-      
-      // Create a pivot group for proper rotation around center
-      const pivot = new THREE.Group();
-      
-      // Move model so its center is at the pivot's origin
-      model.position.set(-center.x, -center.y, -center.z);
-      
-      // Add model to pivot, then pivot to scene
-      pivot.add(model);
-      scene.add(pivot);
-      modelRef.current = pivot; // Rotate the pivot, not the model
-      console.log('[CrystalViewer] Model added to scene!');
-      setIsLoading(false);
-    } catch (error) {
-      console.error('[CrystalViewer] Error loading model:', error);
-      setIsLoading(false);
-    }
-
-    // Animation loop with orbit rotation
+    // Start animation loop immediately (non-blocking)
     const animate = () => {
       animationFrameRef.current = requestAnimationFrame(animate);
       
       if (modelRef.current) {
-        // Apply rotation from touch or auto-rotate
-        if (touchRef.current.autoRotate && !touchRef.current.isActive) {
-          touchRef.current.rotationY += 0.005;
-        }
-        modelRef.current.rotation.x = touchRef.current.rotationX;
-        modelRef.current.rotation.y = touchRef.current.rotationY;
+        modelRef.current.rotation.y += 0.005;
       }
-
-      if (rendererRef.current && sceneRef.current && cameraRef.current) {
-        rendererRef.current.render(sceneRef.current, cameraRef.current);
-        gl.endFrameEXP();
-      }
+      
+      renderer.render(scene, camera);
+      gl.endFrameEXP();
     };
     animate();
+
+    // Load GLB model asynchronously (non-blocking)
+    console.log('[CrystalViewer] Starting to load model for:', crystal.name);
+    (async () => {
+      try {
+        // Download model and texture assets
+        const modelAsset = Asset.fromModule(crystal.model);
+        const textureAsset = Asset.fromModule(crystal.texture);
+        
+        await Promise.all([
+          modelAsset.downloadAsync(),
+          textureAsset.downloadAsync()
+        ]);
+        
+        console.log('[CrystalViewer] Assets downloaded');
+        console.log('[CrystalViewer] Model URI:', modelAsset.localUri);
+        console.log('[CrystalViewer] Texture URI:', textureAsset.localUri);
+        
+        // Load texture via expo-three
+        let texture: THREE.Texture | null = null;
+        try {
+          texture = await loadAsync(textureAsset) as THREE.Texture;
+          if (texture) {
+            texture.flipY = false;
+            texture.colorSpace = THREE.SRGBColorSpace;
+            texture.needsUpdate = true;
+            console.log('[CrystalViewer] Texture loaded successfully');
+          }
+        } catch (texError) {
+          console.log('[CrystalViewer] Could not load texture:', texError);
+        }
+        
+        // Load GLB file using fetch + GLTFLoader.parse
+        let model: THREE.Object3D | null = null;
+        
+        try {
+          console.log('[CrystalViewer] Fetching GLB file...');
+          const response = await fetch(modelAsset.localUri!);
+          const arrayBuffer = await response.arrayBuffer();
+          console.log('[CrystalViewer] GLB fetched, size:', arrayBuffer.byteLength);
+          
+          const loader = new GLTFLoader();
+          const gltf = await new Promise<{ scene: THREE.Group }>((resolve, reject) => {
+            loader.parse(
+              arrayBuffer,
+              '',
+              (result) => {
+                console.log('[CrystalViewer] GLTFLoader.parse success');
+                resolve(result);
+              },
+              (error) => {
+                console.error('[CrystalViewer] GLTFLoader.parse error:', error);
+                reject(error);
+              }
+            );
+          });
+          
+          model = gltf.scene;
+          console.log('[CrystalViewer] Model loaded from GLB');
+          
+          // Replace all materials with our own using the separately loaded texture
+          // This bypasses the blob texture loading issue in React Native
+          model.traverse((child: any) => {
+            if (child.isMesh) {
+              const newMaterial = new THREE.MeshStandardMaterial({
+                color: 0xffffff,
+                metalness: 0.2,
+                roughness: 0.5,
+                side: THREE.DoubleSide,
+              });
+              if (texture) {
+                newMaterial.map = texture;
+              }
+              child.material = newMaterial;
+            }
+          });
+          console.log('[CrystalViewer] Applied texture to model meshes');
+        } catch (glbError) {
+          console.error('[CrystalViewer] GLB loading failed:', glbError);
+        }
+        
+        // Fallback to octahedron if GLB failed
+        if (!model) {
+          console.log('[CrystalViewer] Using fallback geometry');
+          const geometry = new THREE.OctahedronGeometry(1, 0);
+          const material = new THREE.MeshStandardMaterial({
+            color: texture ? 0xffffff : 0xff69b4,
+            metalness: 0.3,
+            roughness: 0.4,
+            transparent: true,
+            opacity: 0.95,
+            side: THREE.DoubleSide,
+          });
+          if (texture) {
+            material.map = texture;
+          }
+          model = new THREE.Mesh(geometry, material);
+        }
+        
+        // Center and scale the model
+        // First, get initial bounding box
+        const box = new THREE.Box3().setFromObject(model);
+        const size = box.getSize(new THREE.Vector3());
+        console.log('[CrystalViewer] Model size:', size);
+        const maxDim = Math.max(size.x, size.y, size.z);
+        const scale = maxDim > 0 ? 2 / maxDim : 1;
+        console.log('[CrystalViewer] Scale:', scale);
+        
+        // Apply scale first
+        model.scale.setScalar(scale);
+        model.updateMatrixWorld(true);
+        
+        // Recalculate bounding box after scaling
+        const scaledBox = new THREE.Box3().setFromObject(model);
+        const center = scaledBox.getCenter(new THREE.Vector3());
+        console.log('[CrystalViewer] Center after scale:', center);
+        
+        // Create a pivot group for proper rotation around center
+        const pivot = new THREE.Group();
+        
+        // Move model so its center is at the pivot's origin
+        model.position.set(-center.x, -center.y, -center.z);
+        
+        // Add model to pivot, then pivot to scene
+        pivot.add(model);
+        scene.add(pivot);
+        modelRef.current = pivot; // Rotate the pivot, not the model
+        console.log('[CrystalViewer] Model added to scene!');
+        setIsLoading(false);
+      } catch (error) {
+        console.error('[CrystalViewer] Error loading model:', error);
+        setIsLoading(false);
+      }
+    })();
   };
 
   // Touch handlers for orbit control
@@ -494,12 +493,13 @@ function CrystalCard({ crystal, onPress, isSelected }: { crystal: Crystal; onPre
 }
 
 export default function CrystalPage({ title }: PageProps) {
+  const insets = useSafeAreaInsets();
   const [selectedCrystal, setSelectedCrystal] = useState<Crystal>(crystals[0]);
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { paddingTop: Math.max(insets.top, 20) }]}>
       <ScrollView 
-        contentContainerStyle={styles.scrollContent}
+        contentContainerStyle={[styles.scrollContent, { paddingBottom: insets.bottom + 90 }]}
         showsVerticalScrollIndicator={false}
       >
         
@@ -520,6 +520,7 @@ export default function CrystalPage({ title }: PageProps) {
             data={crystals}
             horizontal
             showsHorizontalScrollIndicator={false}
+            scrollEnabled={true}
             keyExtractor={(item) => item.id}
             contentContainerStyle={styles.listContent}
             renderItem={({ item }) => (
@@ -545,7 +546,6 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     flexGrow: 1,
-    paddingBottom: 100,
   },
   heading: {
     fontFamily: Platform.select({

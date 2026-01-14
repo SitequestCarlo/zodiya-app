@@ -9,12 +9,16 @@ import {
   Dimensions,
   ScrollView,
 } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { TarotCardImage, TAROT_CARDS } from '../components/tarot/TarotSvgCards';
 import TarotBackside from '../components/tarot/TarotBackside';
+import type { StoredUserData } from '../utils/storage';
 
 interface PageProps {
   title: string;
+  userData?: StoredUserData;
+  onResetData?: () => void;
 }
 
 const CARD_WIDTH = 140;
@@ -238,11 +242,13 @@ export default function TarotPage({ title }: PageProps) {
     }
   };
 
+  const insets = useSafeAreaInsets();
+
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { paddingTop: Math.max(insets.top, 20) }]}>
       <ScrollView
         key={`scroll-${phase}-${readingId}`}
-        contentContainerStyle={styles.scrollContent}
+        contentContainerStyle={[styles.scrollContent, { paddingBottom: insets.bottom + 90 }]}
         showsVerticalScrollIndicator={false}
       >
         {phase === 'selection' && (
@@ -319,7 +325,6 @@ const styles = StyleSheet.create({
   scrollContent: {
     flexGrow: 1,
     paddingHorizontal: 20,
-    paddingBottom: 100,
   },
   heading: {
     fontFamily: Platform.select({

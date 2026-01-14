@@ -11,6 +11,8 @@
   "dependencies": {
     "@expo-google-fonts/cinzel-decorative": "^0.4.1",
     "@expo-google-fonts/lancelot": "^0.4.1",
+    "@expo/vector-icons": "^15.0.3",
+    "@react-native-async-storage/async-storage": "^2.2.0",
     "@types/three": "^0.166.0",
     "astronomia": "^4.2.0",
     "expo": "~54.0.18",
@@ -26,6 +28,7 @@
     "react-dom": "19.1.0",
     "react-native": "0.81.5",
     "react-native-gesture-handler": "^2.29.0",
+    "react-native-safe-area-context": "^5.6.2",
     "react-native-svg": "^15.8.0",
     "react-native-web": "^0.21.0",
     "react-native-wheely": "^0.6.0",

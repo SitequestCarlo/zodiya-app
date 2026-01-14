@@ -56,6 +56,7 @@ export default function PlaceStep({
           data={placeSuggestions}
           keyExtractor={(item, index) => `${item.lat}-${item.lon}-${index}`}
           style={styles.suggestionsList}
+          nestedScrollEnabled
           renderItem={({ item }) => (
             <TouchableOpacity
               style={styles.suggestionItem}

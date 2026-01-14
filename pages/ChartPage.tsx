@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import Svg, { Path } from 'react-native-svg';
 import {
@@ -24,9 +25,12 @@ import {
 } from '../components/chart';
 import type { PlaceSuggestion, NatalSummary } from '../components/chart';
 import { calculateNatalPositions } from '../utils/natalCalculator';
+import type { StoredUserData } from '../utils/storage';
 
 interface PageProps {
   title: string;
+  userData?: StoredUserData;
+  onResetData?: () => void;
 }
 
 const NOMINATIM_BASE_URL = 'https://nominatim.openstreetmap.org/search';
@@ -107,7 +111,8 @@ const StepDot = ({ isActive }: { isActive: boolean }) => {
   );
 };
 
-export default function ChartPage({ title }: PageProps) {
+export default function ChartPage({ title, userData }: PageProps) {
+  const insets = useSafeAreaInsets();
   const [currentStep, setCurrentStep] = useState<FormStep>('date');
   
   // Get current date and time for initial values
@@ -137,6 +142,49 @@ export default function ChartPage({ title }: PageProps) {
   const [summary, setSummary] = useState<NatalSummary | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Auto-populate and show result if userData is provided
+  useEffect(() => {
+    if (userData && userData.birthPlaceName && currentStep === 'date') {
+      // Set form values from userData
+      setSelectedDay(userData.birthDay);
+      setSelectedMonth(userData.birthMonth);
+      setSelectedYear(userData.birthYear);
+      setSelectedHour(userData.birthHour);
+      setSelectedMinute(userData.birthMinute);
+      setSelectedPlace({
+        display_name: userData.birthPlaceName,
+        lat: String(userData.birthPlaceLatitude),
+        lon: String(userData.birthPlaceLongitude),
+      });
+      setBirthPlace(userData.birthPlaceName);
+      
+      // Calculate and show result
+      const birthDate = new Date(
+        parseInt(YEARS[userData.birthYear]),
+        userData.birthMonth,
+        parseInt(DAYS[userData.birthDay])
+      );
+      birthDate.setHours(userData.birthHour, userData.birthMinute, 0);
+      
+      const result = calculateNatalPositions(
+        birthDate,
+        userData.birthPlaceLatitude,
+        userData.birthPlaceLongitude
+      );
+      
+      const natalSummary: NatalSummary = {
+        sunSign: result.sunSign,
+        moonSign: result.moonSign,
+        ascendant: result.ascendant,
+        latitude: userData.birthPlaceLatitude,
+        longitude: userData.birthPlaceLongitude,
+      };
+      
+      setSummary(natalSummary);
+      setCurrentStep('result');
+    }
+  }, []);
 
   const formattedCoordinates = useMemo(() => {
     if (!summary) return null;
@@ -257,7 +305,7 @@ export default function ChartPage({ title }: PageProps) {
       case 'date': return 'Wann wurdest du geboren?';
       case 'time': return 'Um welche Uhrzeit?';
       case 'place': return 'Wo wurdest du geboren?';
-      case 'result': return 'Dein Radix';
+      case 'result': return 'Horoskop';
     }
   };
 
@@ -271,9 +319,9 @@ export default function ChartPage({ title }: PageProps) {
       style={styles.flex}
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
-      <View style={styles.container}>
+      <View style={[styles.container, { paddingTop: Math.max(insets.top, 20) }]}>
         {/* Header section */}
-        <View style={styles.headerSection}>
+        <View style={[styles.headerSection, currentStep === 'result' && styles.headerSectionResult]}>
           {/* <Text style={styles.heading}>{title}</Text> */}
           
           {/* Step indicator - only show for input steps */}
@@ -335,7 +383,7 @@ export default function ChartPage({ title }: PageProps) {
         </View>
 
         {/* Bottom button section */}
-        <View style={styles.bottomSection}>
+        <View style={[styles.bottomSection, { paddingBottom: insets.bottom + 60 }]}>
           <View style={styles.buttonContainer}>
             {currentStep !== 'date' && currentStep !== 'result' && (
               <TouchableOpacity style={styles.backButton} onPress={handleBack}>
@@ -383,17 +431,22 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     alignItems: 'center',
   },
+  headerSectionResult: {
+    paddingTop: 20,
+    paddingBottom: 10,
+  },
   centerSection: {
     flex: 1,
     justifyContent: 'center',
     paddingHorizontal: 20,
   },
   centerSectionResult: {
+    flex: 1,
     justifyContent: 'flex-start',
+    paddingHorizontal: 0,
   },
   bottomSection: {
     paddingHorizontal: 20,
-    paddingBottom: 100,
     paddingTop: 10
   },
   heading: {

@@ -53,7 +53,11 @@ export default function ResultStep({
   const formattedCoordinates = `${summary.latitude.toFixed(2)}°, ${summary.longitude.toFixed(2)}°`;
 
   return (
-    <ScrollView style={styles.resultContainer} showsVerticalScrollIndicator={false}>
+    <ScrollView 
+      style={styles.resultContainer} 
+      contentContainerStyle={styles.resultContent}
+      showsVerticalScrollIndicator={false}
+    >
       <View style={styles.resultCard}>
         <Text style={styles.resultRow}>
           <Text style={styles.resultLabel}>Geburtsdatum: </Text>
@@ -83,6 +87,9 @@ export default function ResultStep({
 const styles = StyleSheet.create({
   resultContainer: {
     width: '100%',
+  },
+  resultContent: {
+    paddingBottom: 0,
   },
   resultCard: {
     padding: 16,
