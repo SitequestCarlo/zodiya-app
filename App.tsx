@@ -29,10 +29,10 @@ export default function App() {
   }, [fontsLoaded, fontError]);
 
   const pages = [
-    { id: 0, component: ChartPage, title: 'Natal Chart' },
-    { id: 1, component: CrystalPage, title: 'Crystal Ball' },
-    { id: 2, component: SpherePage, title: 'Glass Sphere' },
-    { id: 3, component: TarotPage, title: 'Tarot Reading' },
+    { id: 0, component: ChartPage, title: 'Horoskop' },
+    { id: 1, component: CrystalPage, title: 'Kristalle' },
+    { id: 2, component: SpherePage, title: 'Orakel' },
+    { id: 3, component: TarotPage, title: 'Tarot' },
   ];
 
   useEffect(() => {

@@ -12,9 +12,9 @@ interface BottomNavbarProps {
 
 export default function BottomNavbar({ activeTab, onTabChange }: BottomNavbarProps) {
   const tabs = [
-    { id: 0, Icon: ChartIcon, name: 'Chart' },
-    { id: 1, Icon: CrystalIcon, name: 'Crystal' },
-    { id: 2, Icon: GlassSphereIcon, name: 'Sphere' },
+    { id: 0, Icon: ChartIcon, name: 'Horoskop' },
+    { id: 1, Icon: CrystalIcon, name: 'Kristalle' },
+    { id: 2, Icon: GlassSphereIcon, name: 'Orakel' },
     { id: 3, Icon: TarotIcon, name: 'Tarot' },
   ];
 

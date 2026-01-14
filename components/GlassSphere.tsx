@@ -6,26 +6,26 @@ import * as THREE from 'three';
 import { Accelerometer } from 'expo-sensors';
 
 const horoscopeQuotes = [
-  "The stars align in your favor today",
-  "A mysterious opportunity awaits you",
-  "Trust your intuition, it guides you well",
-  "Change is coming, embrace it",
-  "Your creativity will shine brightly",
-  "Love finds you when you least expect it",
-  "Fortune favors the bold today",
-  "A journey of discovery begins soon",
-  "Your patience will be rewarded",
-  "The universe conspires in your favor",
-  "Hidden talents will soon emerge",
-  "A new friendship brings joy",
-  "Financial abundance is near",
-  "Your dreams hold important messages",
-  "Adventure calls, answer it",
-  "Inner peace is within reach",
-  "A challenge becomes a blessing",
-  "Wisdom comes from unexpected sources",
-  "Your kindness creates ripples",
-  "The moon illuminates your path"
+  "Die Sterne stehen heute zu deinen Gunsten",
+  "Eine geheimnisvolle Gelegenheit erwartet dich",
+  "Vertraue deiner Intuition, sie leitet dich gut",
+  "Veränderung kommt, nimm sie an",
+  "Deine Kreativität wird hell erstrahlen",
+  "Die Liebe findet dich, wenn du es am wenigsten erwartest",
+  "Das Glück begünstigt heute die Mutigen",
+  "Eine Reise der Entdeckung beginnt bald",
+  "Deine Geduld wird belohnt werden",
+  "Das Universum verschwört sich zu deinen Gunsten",
+  "Verborgene Talente werden bald zum Vorschein kommen",
+  "Eine neue Freundschaft bringt Freude",
+  "Finanzieller Wohlstand ist nahe",
+  "Deine Träume enthalten wichtige Botschaften",
+  "Das Abenteuer ruft, folge ihm",
+  "Innerer Frieden ist in Reichweite",
+  "Eine Herausforderung wird zum Segen",
+  "Weisheit kommt aus unerwarteten Quellen",
+  "Deine Freundlichkeit erzeugt Wellen",
+  "Der Mond erleuchtet deinen Weg"
 ];
 
 export default function GlassSphere() {
@@ -579,7 +579,7 @@ export default function GlassSphere() {
       {/* Shake instruction for mobile */}
       {Platform.OS !== 'web' && (
         <View style={styles.instructionContainer}>
-          <Text style={styles.instructionText}>Shake your device for a new fortune</Text>
+          <Text style={styles.instructionText}>Schüttle dein Gerät für ein neues Orakel</Text>
         </View>
       )}
     </View>
