@@ -61,7 +61,7 @@ const crystals: Crystal[] = [
     id: 'widder', 
     name: 'Granat', 
     zodiac: 'Widder', 
-    model: require('../assets/models/original/widder_granat.glb'), 
+    model: require('../assets/models/original/Widder_granat.glb'), 
     texture: require('../assets/models/widder-granat/baseColor.jpg'),
     dateRange: '21. März – 20. April',
     description: 'Der Granat steht für Energie, Leidenschaft und Mut – Eigenschaften, die den Widder perfekt beschreiben. Er stärkt Tatkraft und Entschlossenheit, besonders in neuen Lebensphasen.',
