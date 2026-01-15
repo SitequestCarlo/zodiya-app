@@ -27,7 +27,6 @@
       "favicon": "./assets/favicon.png",
       "title": "Zodiya",
       "bundler": "metro",
-      "output": "static",
       "baseUrl": "/zodiya-app/"
     }
   }
