@@ -11,6 +11,7 @@ import SpherePage from './pages/SpherePage';
 import TarotPage from './pages/TarotPage';
 import ImprintPage from './pages/ImprintPage';
 import OnboardingPage from './pages/OnboardingPage';
+import WebStyleFix from './components/WebStyleFix';
 import { getUserData, saveUserData, StoredUserData } from './utils/storage';
 import type { UserData } from './pages/OnboardingPage';
 
@@ -116,6 +117,7 @@ export default function App() {
 
   return (
     <SafeAreaProvider>
+      <WebStyleFix />
       <View style={styles.container}>
         <Animated.View
           style={[
