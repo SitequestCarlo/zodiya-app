@@ -85,6 +85,10 @@ export default function PlaceStep({
 const styles = StyleSheet.create({
   placeContainer: {
     width: '100%',
+    ...(Platform.OS === 'web' && {
+      maxWidth: 400,
+      alignSelf: 'center',
+    }),
   },
   input: {
     backgroundColor: '#fff',

@@ -20,6 +20,13 @@ export default function TarotBackside({
       height={height}
       viewBox="0 0 976.71 1551.78"
       fill="none"
+      // @ts-ignore - web-specific styling to remove shadows
+      style={{
+        boxShadow: 'none',
+        filter: 'none',
+        WebkitBoxShadow: 'none',
+        WebkitFilter: 'none',
+      }}
     >
       {/* Background */}
       <Rect x="0" y="0" width="976.71" height="1551.78" fill={backgroundColor} />

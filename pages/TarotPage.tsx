@@ -8,6 +8,7 @@ import {
   Animated,
   Dimensions,
   ScrollView,
+  Switch,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
@@ -27,8 +28,7 @@ const CARD_HEIGHT = 219; // SVG aspect ratio 1050.7:1643.43 ≈ 1:1.564, with 5p
 const PADDING = 5;
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
-type ReadingType = 'single' | 'three' | null;
-type ReadingPhase = 'selection' | 'reveal';
+type ReadingType = 'single' | 'three';
 
 interface DrawnCard {
   card: typeof TAROT_CARDS[0];
@@ -117,6 +117,15 @@ const TarotCard = ({
         activeOpacity={0.9}
         onPress={onFlip}
         disabled={isFlipped}
+        style={{
+          // @ts-ignore - web-specific styling
+          ...(Platform.OS === 'web' && {
+            boxShadow: 'none',
+            filter: 'none',
+            WebkitBoxShadow: 'none',
+            WebkitFilter: 'none',
+          }),
+        }}
       >
         <View style={styles.cardWrapper}>
           {/* Back of card (showing initially) */}
@@ -179,8 +188,7 @@ const TarotCard = ({
 };
 
 export default function TarotPage({ title }: PageProps) {
-  const [readingType, setReadingType] = useState<ReadingType>(null);
-  const [phase, setPhase] = useState<ReadingPhase>('selection');
+  const [readingType, setReadingType] = useState<ReadingType>('single');
   const [drawnCards, setDrawnCards] = useState<DrawnCard[]>([]);
   const [deck, setDeck] = useState<typeof TAROT_CARDS>([]);
   const [readingId, setReadingId] = useState(0); // Unique ID for each reading session
@@ -190,12 +198,12 @@ export default function TarotPage({ title }: PageProps) {
     return [...TAROT_CARDS].sort(() => Math.random() - 0.5);
   }, []);
 
-  // Start a reading - immediately draw all cards
-  const startReading = useCallback((type: ReadingType) => {
+  // Draw cards for current reading type
+  const drawCards = useCallback(() => {
     const shuffled = getShuffledDeck();
     
     const positions: Array<'past' | 'present' | 'future' | 'single'> =
-      type === 'single'
+      readingType === 'single'
         ? ['single']
         : ['past', 'present', 'future'];
     
@@ -205,12 +213,20 @@ export default function TarotPage({ title }: PageProps) {
       isFlipped: false,
     }));
     
-    setReadingType(type);
     setDrawnCards(cards);
     setDeck(shuffled.slice(positions.length));
-    setPhase('reveal');
     setReadingId((prev) => prev + 1); // Increment reading ID for fresh components
-  }, [getShuffledDeck]);
+  }, [getShuffledDeck, readingType]);
+
+  // Initial draw on mount
+  useEffect(() => {
+    drawCards();
+  }, []);
+
+  // Redraw when reading type changes
+  useEffect(() => {
+    drawCards();
+  }, [readingType]);
 
   // Flip a card
   const flipCard = useCallback((index: number) => {
@@ -224,11 +240,8 @@ export default function TarotPage({ title }: PageProps) {
 
   // Reset reading
   const resetReading = useCallback(() => {
-    setReadingType(null);
-    setPhase('selection');
-    setDrawnCards([]);
-    setDeck([]);
-  }, []);
+    drawCards();
+  }, [drawCards]);
 
   // Get label for position
   const getPositionLabel = (position: DrawnCard['position']) => {
@@ -249,70 +262,71 @@ export default function TarotPage({ title }: PageProps) {
   return (
     <View style={[styles.container, { paddingTop: Math.max(insets.top, 20) }]}>
       <ScrollView
-        key={`scroll-${phase}-${readingId}`}
+        key={`scroll-${readingId}`}
         contentContainerStyle={[styles.scrollContent, { paddingBottom: insets.bottom + 90 }]}
         showsVerticalScrollIndicator={false}
       >
-        {phase === 'selection' && (
-          <View style={styles.selectionContainer}>
-            <Text style={styles.subtitle}>Wähle deine Legung</Text>
-            <TouchableOpacity
-              style={styles.readingButton}
-              onPress={() => startReading('single')}
-            >
-              <Text style={styles.readingButtonTitle}>Tageskarte</Text>
-              <Text style={styles.readingButtonDesc}>
-                Ziehe eine Karte für den Tag
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.readingButton}
-              onPress={() => startReading('three')}
-            >
-              <Text style={styles.readingButtonTitle}>Drei-Karten-Legung</Text>
-              <Text style={styles.readingButtonDesc}>
-                Vergangenheit • Gegenwart • Zukunft
-              </Text>
-            </TouchableOpacity>
-          </View>
-        )}
+        {/* Toggle Switch */}
+        <View style={styles.toggleContainer}>
+          <Text style={[styles.toggleLabel, readingType === 'single' && styles.toggleLabelActive]}>
+            1 Karte
+          </Text>
+          <Switch
+            value={readingType === 'three'}
+            onValueChange={(value) => setReadingType(value ? 'three' : 'single')}
+            trackColor={{ false: '#ddd', true: '#000' }}
+            thumbColor={'#fff'}
+            ios_backgroundColor="#ddd"
+            activeThumbColor="#fff"
+            style={styles.switch}
+            {...(Platform.OS === 'web' && {
+              // @ts-ignore - web-specific styling
+              activeTrackColor: '#000',
+              inactiveTrackColor: '#ddd',
+            })}
+          />
+          <Text style={[styles.toggleLabel, readingType === 'three' && styles.toggleLabelActive]}>
+            3 Karten
+          </Text>
+        </View>
 
-        {phase === 'reveal' && (
-          <View style={styles.revealContainer}>
-            <Text style={styles.subtitle}>
-              {readingType === 'single'
-                ? 'Tippe, um deine Karte aufzudecken'
-                : 'Tippe auf jede Karte zum Aufdecken'}
-            </Text>
-            <View
-              style={[
-                styles.cardsRow,
-                readingType === 'single' && styles.singleCardRow,
-              ]}
-            >
-              {drawnCards.map((drawn, index) => (
-                <TarotCard
-                  key={`${readingId}-${drawn.card.id}-${index}`}
-                  card={drawn.card}
-                  isFlipped={drawn.isFlipped}
-                  onFlip={() => flipCard(index)}
-                  label={getPositionLabel(drawn.position)}
-                  index={index}
-                  showDescription={true}
-                  position={drawn.position}
-                />
-              ))}
-            </View>
-            {drawnCards.every((c) => c.isFlipped) && (
-              <TouchableOpacity
-                style={styles.resetButton}
-                onPress={resetReading}
-              >
-                <Ionicons name="reload" size={20} color="#fff" style={styles.resetButtonIcon} />
-                <Text style={styles.resetButtonText}>Neue Legung</Text>
-              </TouchableOpacity>
-            )}
-          </View>
+        {/* Subtitle */}
+        <Text style={styles.subtitle}>
+          {readingType === 'single'
+            ? 'Tippe, um deine Tageskarte aufzudecken'
+            : 'Tippe auf jede Karte zum Aufdecken'}
+        </Text>
+
+        {/* Cards */}
+        <View
+          style={[
+            styles.cardsRow,
+            readingType === 'single' && styles.singleCardRow,
+          ]}
+        >
+          {drawnCards.map((drawn, index) => (
+            <TarotCard
+              key={`${readingId}-${drawn.card.id}-${index}`}
+              card={drawn.card}
+              isFlipped={drawn.isFlipped}
+              onFlip={() => flipCard(index)}
+              label={getPositionLabel(drawn.position)}
+              index={index}
+              showDescription={true}
+              position={drawn.position}
+            />
+          ))}
+        </View>
+
+        {/* Reset Button */}
+        {drawnCards.every((c) => c.isFlipped) && (
+          <TouchableOpacity
+            style={styles.resetButton}
+            onPress={resetReading}
+          >
+            <Ionicons name="reload" size={20} color="#fff" style={styles.resetButtonIcon} />
+            <Text style={styles.resetButtonText}>Neue Legung</Text>
+          </TouchableOpacity>
         )}
       </ScrollView>
     </View>
@@ -327,6 +341,30 @@ const styles = StyleSheet.create({
   scrollContent: {
     flexGrow: 1,
     paddingHorizontal: 20,
+  },
+  toggleContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 40,
+    marginBottom: 20,
+    gap: 12,
+  },
+  toggleLabel: {
+    fontFamily: Platform.select({
+      web: 'system-ui, -apple-system, sans-serif',
+      default: undefined,
+    }),
+    fontSize: 15,
+    color: '#999',
+    transition: 'color 0.2s ease',
+  },
+  toggleLabelActive: {
+    color: '#000',
+    fontWeight: '600',
+  },
+  switch: {
+    transform: [{ scaleX: 1.1 }, { scaleY: 1.1 }],
   },
   heading: {
     fontFamily: Platform.select({
@@ -344,51 +382,10 @@ const styles = StyleSheet.create({
       web: 'Georgia, serif',
       default: 'Lancelot_400Regular',
     }),
-    fontSize: 20,
-    color: '#333',
-    textAlign: 'center',
-    marginBottom: 30,
-  },
-  selectionContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingVertical: 40,
-  },
-  readingButton: {
-    width: '100%',
-    maxWidth: 300,
-    backgroundColor: '#f8f8f8',
-    borderRadius: 16,
-    padding: 24,
-    marginBottom: 20,
-    borderWidth: 1,
-    borderColor: '#e0e0e0',
-    ...Platform.select({
-      web: {
-        cursor: 'pointer',
-        transition: 'all 0.2s ease',
-      },
-    }),
-  },
-  readingButtonTitle: {
-    fontFamily: Platform.select({
-      web: 'Georgia, serif',
-      default: 'Lancelot_400Regular',
-    }),
-    fontSize: 22,
-    color: '#000',
-    textAlign: 'center',
-    marginBottom: 8,
-  },
-  readingButtonDesc: {
-    fontFamily: Platform.select({
-      web: 'system-ui, -apple-system, sans-serif',
-      default: undefined,
-    }),
-    fontSize: 14,
+    fontSize: 16,
     color: '#666',
     textAlign: 'center',
+    marginBottom: 30,
   },
   revealContainer: {
     flex: 1,
@@ -409,6 +406,13 @@ const styles = StyleSheet.create({
   },
   cardContainer: {
     alignItems: 'center',
+    ...(Platform.OS === 'web' && {
+      // @ts-ignore - web-specific styling
+      boxShadow: 'none',
+      filter: 'none',
+      WebkitBoxShadow: 'none',
+      WebkitFilter: 'none',
+    }),
   },
   cardLabel: {
     fontFamily: Platform.select({
@@ -425,6 +429,13 @@ const styles = StyleSheet.create({
     width: CARD_WIDTH,
     height: CARD_HEIGHT,
     position: 'relative',
+    ...(Platform.OS === 'web' && {
+      // @ts-ignore - web-specific styling
+      filter: 'none',
+      boxShadow: 'none',
+      WebkitFilter: 'none',
+      WebkitBoxShadow: 'none',
+    }),
   },
   card: {
     position: 'absolute',
@@ -434,19 +445,35 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backfaceVisibility: 'hidden',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.2,
-    shadowRadius: 10,
-    elevation: 8,
+    ...(Platform.OS === 'web' && {
+      // @ts-ignore - web-specific styling
+      boxShadow: 'none',
+      filter: 'none',
+      WebkitBoxShadow: 'none',
+      WebkitFilter: 'none',
+    }),
   },
   cardBack: {
     backgroundColor: '#000',
     borderWidth: 2,
     borderColor: '#fff',
+    ...(Platform.OS === 'web' && {
+      // @ts-ignore - web-specific styling
+      boxShadow: 'none',
+      filter: 'none',
+      WebkitBoxShadow: 'none',
+      WebkitFilter: 'none',
+    }),
   },
   cardFront: {
     backgroundColor: '#fff',
+    ...(Platform.OS === 'web' && {
+      // @ts-ignore - web-specific styling
+      boxShadow: 'none',
+      filter: 'none',
+      WebkitBoxShadow: 'none',
+      WebkitFilter: 'none',
+    }),
   },
   cardName: {
     fontFamily: Platform.select({

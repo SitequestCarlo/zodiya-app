@@ -23,6 +23,19 @@
         height: 100%;
         flex: 1;
       }
+      /* Force remove shadows from SVG elements */
+      svg, svg * {
+        box-shadow: none !important;
+        filter: none !important;
+        -webkit-box-shadow: none !important;
+        -webkit-filter: none !important;
+      }
+      /* Override React Native Web generated shadow classes */
+      [class*="boxShadow"],
+      [class*="r-boxShadow"] {
+        box-shadow: none !important;
+        -webkit-box-shadow: none !important;
+      }
     </style>
   </head>
 

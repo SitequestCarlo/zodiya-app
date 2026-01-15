@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Platform } from 'react-native';
 
 // Import all tarot card components
 import {
@@ -293,6 +293,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     overflow: 'hidden',
+    ...(Platform.OS === 'web' && {
+      // @ts-ignore - web-specific styling
+      boxShadow: 'none',
+      filter: 'none',
+      WebkitBoxShadow: 'none',
+      WebkitFilter: 'none',
+    }),
   },
 });
 
