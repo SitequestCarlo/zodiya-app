@@ -25,26 +25,28 @@ export default function ImprintPage({ title }: PageProps) {
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Angaben gemäß § 5 TMG</Text>
         <Text style={styles.text}>
-          [Ihr Name oder Firmenname]{'\n'}
-          [Straße und Hausnummer]{'\n'}
-          [PLZ und Ort]{'\n'}
-          [Land]
+          Hochschule Karlsruhe – Technik und Wirtschaft{'\n'}
+          Moltkestraße 30{'\n'}
+          76133 Karlsruhe{'\n'}
+          Deutschland
+        </Text>
+      </View>
+
+      <View style={styles.section}>
+        <Text style={styles.sectionTitle}>Projekt im Rahmen des Studiums</Text>
+        <Text style={styles.text}>
+          Diese App ist ein studentisches Projekt und dient ausschließlich{'\n'}
+          zu Lehr- und Forschungszwecken.{'\n'}
+          {'\n'}
+          Projektbetreuung: Prof. Martin Schober
         </Text>
       </View>
 
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Kontakt</Text>
         <Text style={styles.text}>
-          E-Mail: [ihre-email@example.com]{'\n'}
-          Telefon: [Ihre Telefonnummer]
-        </Text>
-      </View>
-
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Verantwortlich für den Inhalt</Text>
-        <Text style={styles.text}>
-          [Name]{'\n'}
-          [Adresse]
+          Hochschule Karlsruhe{'\n'}
+          E-Mail: info@h-ka.de
         </Text>
       </View>
 
@@ -53,7 +55,9 @@ export default function ImprintPage({ title }: PageProps) {
         <Text style={styles.text}>
           Die Inhalte dieser App wurden mit größter Sorgfalt erstellt. 
           Für die Richtigkeit, Vollständigkeit und Aktualität der Inhalte 
-          können wir jedoch keine Gewähr übernehmen.
+          können wir jedoch keine Gewähr übernehmen. Die App dient 
+          ausschließlich Bildungszwecken und stellt keine professionelle 
+          Beratung dar.
         </Text>
       </View>
 

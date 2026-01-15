@@ -284,20 +284,6 @@ export default function SpherePage({ title }: PageProps) {
       {Platform.OS !== 'web' && (
         <Text style={styles.instruction}>Schüttle dein Gerät für mehr Weisheiten</Text>
       )}
-      {currentQuote !== "Schüttle dein Gerät\nfür dein Schicksal" && (
-        <TouchableOpacity 
-          style={styles.shareButton}
-          onPress={handleShare}
-          activeOpacity={0.6}
-        >
-          <Svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-            <Path 
-              d="M18 8C19.6569 8 21 6.65685 21 5C21 3.34315 19.6569 2 18 2C16.3431 2 15 3.34315 15 5C15 5.12549 15.0077 5.24919 15.0227 5.37063L8.08261 9.84971C7.54305 9.32831 6.8097 9 6 9C4.34315 9 3 10.3431 3 12C3 13.6569 4.34315 15 6 15C6.8097 15 7.54305 14.6717 8.08261 14.1503L15.0227 18.6294C15.0077 18.7508 15 18.8745 15 19C15 20.6569 16.3431 22 18 22C19.6569 22 21 20.6569 21 19C21 17.3431 19.6569 16 18 16C17.1903 16 16.457 16.3283 15.9174 16.8497L8.97733 12.3706C8.99229 12.2492 9 12.1255 9 12C9 11.8745 8.99229 11.7508 8.97733 11.6294L15.9174 7.15029C16.457 7.67169 17.1903 8 18 8Z" 
-              fill="#000"
-            />
-          </Svg>
-        </TouchableOpacity>
-      )}
     </View>
   );
 }
