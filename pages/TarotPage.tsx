@@ -14,6 +14,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { TarotCardImage, TAROT_CARDS } from '../components/tarot/TarotSvgCards';
 import TarotBackside from '../components/tarot/TarotBackside';
 import type { StoredUserData } from '../utils/storage';
+import { recordTarotReading } from '../utils/achievementTracker';
 
 interface PageProps {
   title: string;
@@ -218,6 +219,7 @@ export default function TarotPage({ title }: PageProps) {
         i === index ? { ...c, isFlipped: true } : c
       )
     );
+    recordTarotReading();
   }, []);
 
   // Reset reading

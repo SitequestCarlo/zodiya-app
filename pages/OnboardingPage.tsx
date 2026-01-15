@@ -177,12 +177,11 @@ export default function OnboardingPage({ onComplete }: OnboardingPageProps) {
       style={styles.container}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
-      <ScrollView
-        contentContainerStyle={[
+      <View
+        style={[
           styles.scrollContent,
           { paddingTop: Math.max(insets.top, 40), paddingBottom: Math.max(insets.bottom, 40) }
         ]}
-        keyboardShouldPersistTaps="handled"
       >
         <Animated.View style={[styles.content, { opacity: fadeAnim }]}>
           <View style={styles.header}>
@@ -267,7 +266,7 @@ export default function OnboardingPage({ onComplete }: OnboardingPageProps) {
             ))}
           </View>
         </Animated.View>
-      </ScrollView>
+      </View>
     </KeyboardAvoidingView>
   );
 }
@@ -278,9 +277,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   scrollContent: {
-    flexGrow: 1,
-    justifyContent: 'center',
-    paddingHorizontal: 20,
+    flex: 1,
+    justifyContent: 'space-between',
   },
   content: {
     flex: 1,
@@ -349,12 +347,13 @@ const styles = StyleSheet.create({
   },
   backButtonText: {
     fontFamily: Platform.select({
-      web: 'Georgia, serif',
-      default: 'Lancelot_400Regular',
+      web: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+      default: 'CinzelDecorative_700Bold',
     }),
-    fontSize: 18,
+    fontSize: 16,
     color: '#000',
     textAlign: 'center',
+    fontWeight: Platform.select({ web: '600', default: undefined }),
   },
   nextButton: {
     paddingHorizontal: 32,
@@ -364,12 +363,13 @@ const styles = StyleSheet.create({
   },
   nextButtonText: {
     fontFamily: Platform.select({
-      web: 'Georgia, serif',
-      default: 'Lancelot_400Regular',
+      web: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+      default: 'CinzelDecorative_700Bold',
     }),
-    fontSize: 18,
+    fontSize: 16,
     color: '#fff',
     textAlign: 'center',
+    fontWeight: Platform.select({ web: '600', default: undefined }),
   },
   buttonDisabled: {
     backgroundColor: '#ccc',

@@ -407,7 +407,7 @@ export default function ChartPage({ title, userData }: PageProps) {
               </TouchableOpacity>
             ) : (
               <TouchableOpacity style={styles.continueButton} onPress={handleStartOver}>
-                <Text style={styles.continueButtonText}>Neu starten</Text>
+                <Text style={styles.continueButtonText}>Neues Horoskop berechnen</Text>
               </TouchableOpacity>
             )}
           </View>
