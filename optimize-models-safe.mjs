@@ -1,15 +1,6 @@
-import { NodeIO } from '@gltf-transform/core';
+import { NodeIO, Document } from '@gltf-transform/core';
 import { ALL_EXTENSIONS } from '@gltf-transform/extensions';
-import { 
-  dedup, 
-  prune, 
-  quantize, 
-  weld,
-  flatten,
-  join as joinMeshes,
-  simplify
-} from '@gltf-transform/functions';
-import { MeshoptSimplifier } from 'meshoptimizer';
+import { prune } from '@gltf-transform/functions';
 import { readdirSync, statSync } from 'fs';
 import { join, basename } from 'path';
 
@@ -27,7 +18,7 @@ console.log(`Found ${files.length} GLB files to optimize\n`);
 // Process each model
 for (const filePath of files) {
   const fileName = basename(filePath);
-  const outputPath = filePath.replace('/original/', '/');
+  const outputPath = filePath;
   
   console.log(`Processing: ${fileName}`);
   
@@ -39,29 +30,15 @@ for (const filePath of files) {
     // Load the GLB
     const document = await io.read(filePath);
     
-    // Only remove embedded texture data, keep everything else (materials, UVs, etc.)
+    // ONLY remove embedded texture images - keep ALL geometry, UVs, materials
     const root = document.getRoot();
     
-    // Dispose texture images but keep material and UV structure intact
-    root.listTextures().forEach(texture => {
-      // Just clear the image data
-      texture.setImage(null);
-    });
+    // Remove textures completely
+    const textures = root.listTextures();
+    textures.forEach(texture => texture.dispose());
     
-    // Apply minimal optimizations - NO simplification or heavy quantization
-    await document.transform(
-      // Remove duplicate vertex/texture data
-      dedup(),
-      
-      // Weld duplicate vertices (minimal tolerance)
-      weld({ tolerance: 0.00001 }),
-      
-      // Join compatible meshes
-      joinMeshes(),
-      
-      // Remove unused nodes, meshes, materials, textures, etc.
-      prune()
-    );
+    // Clean up orphaned data
+    await document.transform(prune());
     
     // Write optimized GLB
     await io.write(outputPath, document);

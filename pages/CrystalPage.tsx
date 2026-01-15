@@ -341,8 +341,10 @@ function CrystalViewer({ crystal }: { crystal: Crystal }) {
         console.log('[CrystalViewer] Model loaded from GLB');
         
         // Replace all materials with our own using the separately loaded texture
+        let meshCount = 0;
         model.traverse((child: any) => {
           if (child.isMesh) {
+            meshCount++;
             const newMaterial = new THREE.MeshStandardMaterial({
               color: 0xffffff,
               metalness: 0.2,
@@ -351,11 +353,16 @@ function CrystalViewer({ crystal }: { crystal: Crystal }) {
             });
             if (texture) {
               newMaterial.map = texture;
+              newMaterial.needsUpdate = true;
+              console.log('[CrystalViewer] Applied texture to mesh', meshCount);
+            } else {
+              console.log('[CrystalViewer] No texture available for mesh', meshCount);
             }
             child.material = newMaterial;
+            child.material.needsUpdate = true;
           }
         });
-        console.log('[CrystalViewer] Applied texture to model meshes');
+        console.log('[CrystalViewer] Applied materials to', meshCount, 'meshes, texture:', !!texture);
       } catch (glbError) {
         console.error('[CrystalViewer] GLB loading failed:', glbError);
       }
