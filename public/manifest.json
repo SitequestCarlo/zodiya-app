@@ -16,7 +16,7 @@
       "purpose": "any maskable"
     }
   ],
-  "start_url": "/",
+  "start_url": "/zodiya-app/",
   "display": "standalone",
   "theme_color": "#ffffff",
   "background_color": "#ffffff",
