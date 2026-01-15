@@ -9,6 +9,7 @@ import ChartPage from './pages/ChartPage';
 import CrystalPage from './pages/CrystalPage';
 import SpherePage from './pages/SpherePage';
 import TarotPage from './pages/TarotPage';
+import ImprintPage from './pages/ImprintPage';
 import OnboardingPage from './pages/OnboardingPage';
 import { getUserData, saveUserData, StoredUserData } from './utils/storage';
 import type { UserData } from './pages/OnboardingPage';
@@ -67,6 +68,7 @@ export default function App() {
     { id: 2, component: CrystalPage, title: 'Kristalle' },
     { id: 3, component: SpherePage, title: 'Orakel' },
     { id: 4, component: TarotPage, title: 'Tarot' },
+    { id: 5, component: ImprintPage, title: 'Impressum' },
   ];
 
   useEffect(() => {
@@ -127,7 +129,7 @@ export default function App() {
             title={pages[activeTab].title} 
             userData={userData}
             onResetData={activeTab === 0 ? handleResetData : undefined}
-            onNavigate={activeTab === 0 ? handleTabChange : undefined}
+            onNavigate={handleTabChange}
           />
         </Animated.View>
         <BottomNavbar activeTab={activeTab} onTabChange={handleTabChange} />

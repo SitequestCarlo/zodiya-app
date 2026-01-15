@@ -15,6 +15,7 @@ import { getUserData, StoredUserData, clearUserData } from '../utils/storage';
 import { calculateNatalPositions } from '../utils/natalCalculator';
 import type { NatalSummary } from '../components/chart';
 import { DAYS, MONTHS, YEARS } from '../components/chart';
+import { ZodiacIconMap } from '../components/chart/ZodiacIcons';
 
 interface HomePageProps {
   title: string;
@@ -275,31 +276,61 @@ export default function HomePage({ title, userData, onResetData, onNavigate }: H
       {natalData && (
         <>
           {/* Natal Chart Summary */}
-          <TouchableOpacity 
-            style={styles.card}
-            onPress={() => onNavigate && onNavigate(1)}
-            activeOpacity={0.7}
-          >
-            <Text style={styles.cardTitle}>Deine Sternzeichen</Text>
-            <Text style={styles.cardSubtitle}>Tippe für Details</Text>
-            <View style={styles.signRow}>
-              <View style={styles.signItem}>
-                <Text style={styles.signLabel}>Sonnenzeichen</Text>
-                <Text style={styles.signValue}>{getGermanZodiacName(natalData.sunSign)}</Text>
+          <View style={styles.zodiacColumn}>
+            <TouchableOpacity 
+              style={styles.zodiacCard}
+              onPress={() => onNavigate && onNavigate(1)}
+              activeOpacity={0.7}
+            >
+              <View style={styles.zodiacCardContent}>
+                {ZodiacIconMap[natalData.sunSign] && 
+                  React.createElement(ZodiacIconMap[natalData.sunSign], { size: 36, color: '#000' })
+                }
+                <View style={styles.zodiacTextContainer}>
+                  <Text style={styles.signLabel}>Sonnenzeichen</Text>
+                  <Text style={styles.signValue}>{natalData.sunSign}</Text>
+                  <Text style={styles.signValueGerman}>{getGermanZodiacName(natalData.sunSign)}</Text>
+                </View>
               </View>
-              <View style={styles.signItem}>
-                <Text style={styles.signLabel}>Mondzeichen</Text>
-                <Text style={styles.signValue}>{getGermanZodiacName(natalData.moonSign)}</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity 
+              style={styles.zodiacCard}
+              onPress={() => onNavigate && onNavigate(1)}
+              activeOpacity={0.7}
+            >
+              <View style={styles.zodiacCardContent}>
+                {ZodiacIconMap[natalData.moonSign] && 
+                  React.createElement(ZodiacIconMap[natalData.moonSign], { size: 36, color: '#000' })
+                }
+                <View style={styles.zodiacTextContainer}>
+                  <Text style={styles.signLabel}>Mondzeichen</Text>
+                  <Text style={styles.signValue}>{natalData.moonSign}</Text>
+                  <Text style={styles.signValueGerman}>{getGermanZodiacName(natalData.moonSign)}</Text>
+                </View>
               </View>
-              <View style={styles.signItem}>
-                <Text style={styles.signLabel}>Aszendent</Text>
-                <Text style={styles.signValue}>{getGermanZodiacName(natalData.ascendant)}</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity 
+              style={styles.zodiacCard}
+              onPress={() => onNavigate && onNavigate(1)}
+              activeOpacity={0.7}
+            >
+              <View style={styles.zodiacCardContent}>
+                {ZodiacIconMap[natalData.ascendant] && 
+                  React.createElement(ZodiacIconMap[natalData.ascendant], { size: 36, color: '#000' })
+                }
+                <View style={styles.zodiacTextContainer}>
+                  <Text style={styles.signLabel}>Aszendent</Text>
+                  <Text style={styles.signValue}>{natalData.ascendant}</Text>
+                  <Text style={styles.signValueGerman}>{getGermanZodiacName(natalData.ascendant)}</Text>
+                </View>
               </View>
-            </View>
-          </TouchableOpacity>
+            </TouchableOpacity>
+          </View>
 
           {/* Daily Message */}
-          <View style={styles.card}>
+          <View style={styles.messageCard}>
             <Text style={styles.cardTitle}>Deine Tagesbotschaft</Text>
             <Text style={styles.message}>
               {dailyHoroscopes[natalData.sunSign]?.[new Date().getDay() % dailyHoroscopes[natalData.sunSign].length] || 
@@ -307,20 +338,20 @@ export default function HomePage({ title, userData, onResetData, onNavigate }: H
             </Text>
           </View>
 
-          {/* Daily Do's */}
-          <View style={styles.card}>
-            <Text style={styles.cardTitle}>Heute empfohlen</Text>
-            {dailyDosAndDonts[natalData.sunSign]?.dos.map((doItem, index) => (
-              <Text key={index} style={styles.listItem}>• {doItem}</Text>
-            ))}
-          </View>
-
-          {/* Daily Don'ts */}
-          <View style={styles.card}>
-            <Text style={styles.cardTitle}>Heute vermeiden</Text>
-            {dailyDosAndDonts[natalData.sunSign]?.donts.map((dontItem, index) => (
-              <Text key={index} style={styles.listItem}>• {dontItem}</Text>
-            ))}
+          {/* Daily Do's and Don'ts */}
+          <View style={styles.dosAndDontsContainer}>
+            <View style={styles.dosColumn}>
+              <Text style={styles.columnTitle}>Heute empfohlen</Text>
+              {dailyDosAndDonts[natalData.sunSign]?.dos.map((doItem, index) => (
+                <Text key={index} style={styles.listItem}>• {doItem}</Text>
+              ))}
+            </View>
+            <View style={styles.dontsColumn}>
+              <Text style={styles.columnTitle}>Heute vermeiden</Text>
+              {dailyDosAndDonts[natalData.sunSign]?.donts.map((dontItem, index) => (
+                <Text key={index} style={styles.listItem}>• {dontItem}</Text>
+              ))}
+            </View>
           </View>
 
           {/* Tarot Button */}
@@ -337,9 +368,15 @@ export default function HomePage({ title, userData, onResetData, onNavigate }: H
         </>
       )}
 
-      <TouchableOpacity style={styles.resetButton} onPress={handleReset}>
-        <Text style={styles.resetButtonText}>Daten löschen</Text>
-      </TouchableOpacity>
+      <View style={styles.footerLinks}>
+        <TouchableOpacity style={styles.resetButton} onPress={handleReset}>
+          <Text style={styles.resetButtonText}>Daten löschen</Text>
+        </TouchableOpacity>
+        <Text style={styles.linkSeparator}>•</Text>
+        <TouchableOpacity style={styles.resetButton} onPress={() => onNavigate && onNavigate(5)}>
+          <Text style={styles.resetButtonText}>Impressum</Text>
+        </TouchableOpacity>
+      </View>
     </ScrollView>
   );
 }
@@ -379,19 +416,43 @@ const styles = StyleSheet.create({
     }),
   },
   card: {
+    backgroundColor: 'transparent',
+    borderRadius: 0,
+    padding: 0,
+    marginBottom: 48,
+  },
+  zodiacColumn: {
+    gap: 10,
+    marginBottom: 48,
+  },
+  zodiacCard: {
+    backgroundColor: '#f9f9f9',
+    borderRadius: 16,
+    padding: 16,
+  },
+  zodiacCardContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+  },
+  zodiacTextContainer: {
+    flex: 1,
+    gap: 2,
+  },
+  messageCard: {
     backgroundColor: '#f9f9f9',
     borderRadius: 20,
     padding: 24,
-    marginBottom: 20,
+    marginBottom: 48,
   },
   cardTitle: {
     fontFamily: Platform.select({
       web: 'Georgia, serif',
       default: 'Lancelot_400Regular',
     }),
-    fontSize: 22,
+    fontSize: 20,
     color: '#000',
-    marginBottom: 16,
+    marginBottom: 20,
   },
   cardSubtitle: {
     fontSize: 14,
@@ -402,34 +463,62 @@ const styles = StyleSheet.create({
   signRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    gap: 12,
+    gap: 16,
   },
   signItem: {
     flex: 1,
     alignItems: 'center',
+    gap: 8,
   },
   signLabel: {
-    fontSize: 13,
-    color: '#666',
-    marginBottom: 6,
-    textAlign: 'center',
+    fontSize: 11,
+    color: '#999',
+    marginBottom: 0,
+    textAlign: 'left',
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
   },
   signValue: {
-    fontSize: 18,
+    fontSize: 17,
     color: '#000',
     fontWeight: '600',
-    textAlign: 'center',
+    textAlign: 'left',
+    marginTop: 0,
+  },
+  signValueGerman: {
+    fontSize: 13,
+    color: '#999',
+    fontWeight: '400',
+    textAlign: 'left',
+    marginTop: 0,
   },
   message: {
-    fontSize: 16,
+    fontSize: 15,
     lineHeight: 24,
-    color: '#333',
+    color: '#666',
   },
   listItem: {
+    fontSize: 14,
+    lineHeight: 24,
+    color: '#666',
+    marginBottom: 6,
+  },
+  dosAndDontsContainer: {
+    flexDirection: 'row',
+    gap: 16,
+    marginBottom: 48,
+  },
+  dosColumn: {
+    flex: 1,
+  },
+  dontsColumn: {
+    flex: 1,
+  },
+  columnTitle: {
     fontSize: 15,
-    lineHeight: 26,
-    color: '#333',
-    marginBottom: 8,
+    fontWeight: '600',
+    color: '#000',
+    marginBottom: 12,
   },
   tarotButton: {
     backgroundColor: '#000',
@@ -449,11 +538,21 @@ const styles = StyleSheet.create({
     fontSize: 17,
     fontWeight: '600',
   },
+  footerLinks: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 20,
+    marginBottom: 20,
+    gap: 8,
+  },
+  linkSeparator: {
+    fontSize: 11,
+    color: '#ccc',
+  },
   resetButton: {
     alignItems: 'center',
     paddingVertical: 12,
-    marginTop: 20,
-    marginBottom: 20,
   },
   resetButtonText: {
     fontSize: 11,
