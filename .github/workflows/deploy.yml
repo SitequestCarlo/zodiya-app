@@ -40,6 +40,12 @@ jobs:
       - name: Build Expo web
         run: npx expo export --platform web
         
+      - name: Add .nojekyll file
+        run: touch dist/.nojekyll
+        
+      - name: List dist contents (for debugging)
+        run: ls -la dist/
+        
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
