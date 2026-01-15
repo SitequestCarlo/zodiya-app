@@ -7,8 +7,8 @@ import { statSync } from 'fs';
 const io = new NodeIO().registerExtensions(ALL_EXTENSIONS);
 
 const largeModels = [
-  { path: './assets/models/original/Krebs_adularia.glb', ratio: 0.3 }, // Keep only 30% of triangles
-  { path: './assets/models/original/steinbock_onyx.glb', ratio: 0.5 }  // Keep 50% of triangles
+  { path: './assets/models/original/Krebs_adularia.glb', ratio: 0.15 }, // Keep only 15% of triangles - very aggressive
+  { path: './assets/models/original/steinbock_onyx.glb', ratio: 0.25 }  // Keep 25% of triangles
 ];
 
 console.log('Optimizing large models with geometry simplification...\n');
