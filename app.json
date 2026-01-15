@@ -7,6 +7,9 @@
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
+    "experiments": {
+      "baseUrl": "/zodiya-app"
+    },
     "splash": {
       "image": "./assets/splash-icon.png",
       "resizeMode": "contain",
@@ -26,8 +29,7 @@
     "web": {
       "favicon": "./assets/favicon.png",
       "title": "Zodiya",
-      "bundler": "metro",
-      "baseUrl": "/zodiya-app/"
+      "bundler": "metro"
     }
   }
 }
