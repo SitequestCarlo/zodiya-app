@@ -22,8 +22,9 @@ export default function BottomNavbar({ activeTab, onTabChange }: BottomNavbarPro
 
   return (
     <>
-    <View style={styles.container}>
-      {tabs.map((tab) => {
+    <View style={styles.outerContainer}>
+      <View style={styles.container}>
+        {tabs.map((tab) => {
         const isActive = activeTab === tab.id;
         return (
           <TouchableOpacity
@@ -45,17 +46,24 @@ export default function BottomNavbar({ activeTab, onTabChange }: BottomNavbarPro
           </TouchableOpacity>
         );
       })}
+      </View>
     </View>
     </>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  outerContainer: {
     position: 'absolute',
     bottom: 0,
     left: 0,
     right: 0,
+    alignItems: 'center',
+    backgroundColor: '#f4f4f4',
+  },
+  container: {
+    width: '100%',
+    maxWidth: Platform.OS === 'web' ? 600 : undefined,
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
