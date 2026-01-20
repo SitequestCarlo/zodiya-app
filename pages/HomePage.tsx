@@ -193,15 +193,6 @@ export default function HomePage({ title, userData, onResetData, onNavigate }: H
     return zodiacMap[englishName] || englishName;
   };
 
-  const updateStreak = async () => {
-    try {
-      const storedData = await AsyncStorage.getItem('streakData');
-      const today = new Date().toDateString();
-      
-      if (storedData) {
-        const data: StreakData = JSON.parse(storedData);
-    
-
   // Get a consistent selection based on sign and date
   const getSignBasedIndex = (sign: string, arrayLength: number, offset: number = 0): number => {
     const signs = ['Aries', 'Taurus', 'Gemini', 'Cancer', 'Leo', 'Virgo', 'Libra', 'Scorpio', 'Sagittarius', 'Capricorn', 'Aquarius', 'Pisces'];
@@ -235,7 +226,16 @@ export default function HomePage({ title, userData, onResetData, onNavigate }: H
       getSignBasedIndex(sign, universalDonts.length, 2),
     ];
     return indices.map(i => universalDonts[i]);
-  };    const lastVisit = new Date(data.lastVisitDate);
+  };
+
+  const updateStreak = async () => {
+    try {
+      const storedData = await AsyncStorage.getItem('streakData');
+      const today = new Date().toDateString();
+      
+      if (storedData) {
+        const data: StreakData = JSON.parse(storedData);
+        const lastVisit = new Date(data.lastVisitDate);
         const daysDiff = Math.floor((new Date(today).getTime() - lastVisit.getTime()) / (1000 * 60 * 60 * 24));
         
         if (data.lastVisitDate === today) {
@@ -479,7 +479,33 @@ export default function HomePage({ title, userData, onResetData, onNavigate }: H
         <View style={styles.streakContent}>
           <View style={styles.streakTextRow}>
             <MaterialCommunityIcons name="fire" size={20} color="#000" />
-            <TegetDailyHoroscope(natalData.sunSign)}
+            <Text style={styles.streakText}>
+              {streakData.currentStreak} Tag{streakData.currentStreak !== 1 ? 'e' : ''} Streak
+            </Text>
+          </View>
+          <Text style={styles.streakGoal}>
+            Ziel: {getNextStreakGoal(streakData.currentStreak)}
+          </Text>
+        </View>
+        <View style={styles.progressBarContainer}>
+          <View 
+            style={[
+              styles.progressBar,
+              { 
+                width: `${Math.min((streakData.currentStreak / getNextStreakGoal(streakData.currentStreak)) * 100, 100)}%` 
+              }
+            ]} 
+          />
+        </View>
+      </View>
+
+      {natalData && (
+        <>
+          {/* Daily Message */}
+          <View style={styles.messageCard}>
+            <Text style={styles.cardTitle}>Deine Tagesbotschaft</Text>
+            <Text style={styles.message}>
+              {getDailyHoroscope(natalData.sunSign)}
             </Text>
           </View>
 
@@ -493,33 +519,7 @@ export default function HomePage({ title, userData, onResetData, onNavigate }: H
             </View>
             <View style={styles.dontsColumn}>
               <Text style={styles.columnTitle}>Heute vermeiden</Text>
-              {getDailyDonts(natalData.sunSign)
-          />
-        </View>
-      </View>
-
-      {natalData && (
-        <>
-          {/* Daily Message */}
-          <View style={styles.messageCard}>
-            <Text style={styles.cardTitle}>Deine Tagesbotschaft</Text>
-            <Text style={styles.message}>
-              {dailyHoroscopes[natalData.sunSign]?.[new Date().getDay() % dailyHoroscopes[natalData.sunSign].length] || 
-               'Heute ist ein guter Tag, um achtsam zu sein und deinen Intuitionen zu folgen.'}
-            </Text>
-          </View>
-
-          {/* Daily Do's and Don'ts */}
-          <View style={styles.dosAndDontsContainer}>
-            <View style={styles.dosColumn}>
-              <Text style={styles.columnTitle}>Heute empfohlen</Text>
-              {dailyDosAndDonts[natalData.sunSign]?.dos.map((doItem, index) => (
-                <Text key={index} style={styles.listItem}>• {doItem}</Text>
-              ))}
-            </View>
-            <View style={styles.dontsColumn}>
-              <Text style={styles.columnTitle}>Heute vermeiden</Text>
-              {dailyDosAndDonts[natalData.sunSign]?.donts.map((dontItem, index) => (
+              {getDailyDonts(natalData.sunSign).map((dontItem, index) => (
                 <Text key={index} style={styles.listItem}>• {dontItem}</Text>
               ))}
             </View>
