@@ -383,7 +383,7 @@ export default function ChartPage({ title, userData }: PageProps) {
         </View>
 
         {/* Bottom button section */}
-        <View style={[styles.bottomSection, { paddingBottom: insets.bottom + 60 }]}>
+        <View style={[styles.bottomSection, { paddingBottom: Math.max(insets.bottom + 60, Platform.OS === 'web' ? 100 : 60) }]}>
           <View style={styles.buttonContainer}>
             {currentStep !== 'date' && currentStep !== 'result' && (
               <TouchableOpacity style={styles.backButton} onPress={handleBack}>
