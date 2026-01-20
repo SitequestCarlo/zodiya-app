@@ -43,126 +43,83 @@ interface HomePageProps {
   onNavigate?: (tabId: number) => void;
 }
 
-const zodiacSigns = [
-  'Widder', 'Stier', 'Zwillinge', 'Krebs', 'Löwe', 'Jungfrau',
-  'Waage', 'Skorpion', 'Schütze', 'Steinbock', 'Wassermann', 'Fische'
+
+// Universal daily horoscope messages - work for all signs but selection is influenced by sign
+const universalHoroscopes: string[] = [
+  'Heute ist ein Tag voller Möglichkeiten. Vertraue deiner inneren Stimme.',
+  'Deine Intuition weist dir den richtigen Weg. Höre genau hin.',
+  'Eine unerwartete Begegnung könnte heute neue Perspektiven eröffnen.',
+  'Konzentriere dich auf das, was dir wirklich wichtig ist. Qualität zählt.',
+  'Kreativität und Selbstausdruck stehen heute im Vordergrund.',
+  'Geduld und Beständigkeit bringen die besten Ergebnisse.',
+  'Kommunikation ist der Schlüssel. Deine Worte haben besondere Kraft.',
+  'Harmonie und Balance helfen dir, Herausforderungen zu meistern.',
+  'Vertraue deiner inneren Stärke. Du bist fähiger, als du denkst.',
+  'Neue Ideen und frische Energie begleiten dich durch den Tag.',
+  'Achte auf die kleinen Details. Sie machen heute den Unterschied.',
+  'Beziehungen und Verbindungen stehen im Fokus. Pflege sie achtsam.',
+  'Deine natürliche Weisheit führt dich zu wichtigen Erkenntnissen.',
+  'Transformation ist möglich. Sei offen für Veränderung.',
+  'Optimismus und Zuversicht öffnen dir viele Türen.',
+  'Praktische Lösungen liegen näher, als du denkst.',
+  'Deine Empathie und dein Mitgefühl sind heute besonders wertvoll.',
+  'Selbstfürsorge ist kein Luxus, sondern eine Notwendigkeit.',
+  'Mut und Entschlossenheit bringen dich deinen Zielen näher.',
+  'Inspiration kommt von unerwarteten Orten. Bleib aufmerksam.',
+  'Vertraue dem Prozess. Alles entwickelt sich zu seiner Zeit.',
+  'Deine authentische Selbst verdient es, gesehen zu werden.',
+  'Grenzen setzen ist ein Akt der Selbstliebe. Respektiere deine Bedürfnisse.',
+  'Heute ist ein guter Tag, um alte Muster loszulassen.',
+  'Deine Vision trägt die Kraft zur Verwirklichung in sich.',
+  'Kleine Schritte führen zu großen Veränderungen.',
+  'Vertraue darauf, dass du zur richtigen Zeit am richtigen Ort bist.',
+  'Deine einzigartige Perspektive ist wertvoll. Teile sie.',
+  'Balance zwischen Geben und Nehmen schafft inneren Frieden.',
+  'Der gegenwärtige Moment birgt alle Möglichkeiten.',
 ];
 
-// Daily horoscope messages based on zodiac signs
-const dailyHoroscopes: Record<string, string[]> = {
-  'Aries': [
-    'Heute ist ein Tag voller Energie und neuer Möglichkeiten. Nutze deine natürliche Führungskraft.',
-    'Deine Initiative wird heute besonders geschätzt. Zeit, mutige Entscheidungen zu treffen.',
-    'Eine unerwartete Gelegenheit könnte heute deinen Weg kreuzen. Sei bereit zu handeln.',
-  ],
-  'Taurus': [
-    'Geduld und Beständigkeit bringen heute die besten Ergebnisse. Vertraue deinem Prozess.',
-    'Konzentriere dich auf das, was dir wirklich wichtig ist. Qualität über Quantität.',
-    'Deine praktische Herangehensweise hilft dir heute, wichtige Probleme zu lösen.',
-  ],
-  'Gemini': [
-    'Kommunikation steht heute im Mittelpunkt. Deine Worte haben besondere Kraft.',
-    'Deine Neugierde führt dich zu interessanten Entdeckungen. Bleib aufgeschlossen.',
-    'Netzwerken und soziale Kontakte bringen heute positive Überraschungen.',
-  ],
-  'Cancer': [
-    'Vertraue heute deinen Gefühlen. Deine Intuition weist dir den richtigen Weg.',
-    'Familie und enge Beziehungen stehen im Fokus. Zeit für emotionale Verbindungen.',
-    'Selbstfürsorge ist heute besonders wichtig. Höre auf die Bedürfnisse deines Herzens.',
-  ],
-  'Leo': [
-    'Deine Kreativität und Ausstrahlung sind heute besonders stark. Zeig dich der Welt.',
-    'Selbstvertrauen ist dein größter Trumpf heute. Stehe zu dem, was du bist.',
-    'Eine Chance, im Rampenlicht zu stehen, könnte sich heute ergeben.',
-  ],
-  'Virgo': [
-    'Dein Auge fürs Detail macht heute den Unterschied. Präzision zahlt sich aus.',
-    'Organisation und Struktur helfen dir, deine Ziele zu erreichen. Bleib fokussiert.',
-    'Deine praktische Intelligenz löst heute komplexe Probleme mit Leichtigkeit.',
-  ],
-  'Libra': [
-    'Harmonie und Balance stehen heute im Vordergrund. Suche den Ausgleich.',
-    'Deine diplomatischen Fähigkeiten sind heute besonders gefragt. Du bringst Menschen zusammen.',
-    'Ästhetik und Schönheit inspirieren dich heute. Umgib dich mit dem, was dir gefällt.',
-  ],
-  'Scorpio': [
-    'Deine Intensität und Leidenschaft führen heute zu tiefen Einsichten.',
-    'Transformation ist möglich. Lass los, was dir nicht mehr dient.',
-    'Vertraue deiner inneren Stärke. Du bist mächtiger, als du denkst.',
-  ],
-  'Sagittarius': [
-    'Abenteuer ruft heute. Erweitere deinen Horizont und wage Neues.',
-    'Optimismus und Zuversicht öffnen dir heute viele Türen.',
-    'Deine philosophische Natur hilft dir, größere Zusammenhänge zu erkennen.',
-  ],
-  'Capricorn': [
-    'Ausdauer und Disziplin bringen dich heute deinen Zielen näher.',
-    'Deine Verantwortungsbewusstsein wird geschätzt. Führe mit gutem Beispiel.',
-    'Langfristige Planung zahlt sich aus. Denke strategisch.',
-  ],
-  'Aquarius': [
-    'Innovation und Originalität sind heute deine Stärken. Denk anders.',
-    'Gemeinschaft und Zusammenarbeit bringen unerwartete Vorteile.',
-    'Deine Vision für die Zukunft inspiriert andere. Teile deine Ideen.',
-  ],
-  'Pisces': [
-    'Intuition und Mitgefühl leiten dich heute sicher durch den Tag.',
-    'Deine kreative und spirituelle Seite sucht Ausdruck. Lass sie fließen.',
-    'Empathie verbindet dich heute tief mit anderen. Sei der Heiler, der du bist.',
-  ],
-};
+// Universal do's and don'ts - selection influenced by zodiac sign
+const universalDos: string[] = [
+  'Achtsam kommunizieren',
+  'Neue Perspektiven einnehmen',
+  'Kreativ ausdrücken',
+  'Grenzen respektieren',
+  'Intuition vertrauen',
+  'Selbstfürsorge praktizieren',
+  'Authentisch sein',
+  'Verbindungen pflegen',
+  'Dankbarkeit kultivieren',
+  'Bewegung einbauen',
+  'Pausen einlegen',
+  'Aktiv zuhören',
+  'Kleinigkeiten schätzen',
+  'Neues ausprobieren',
+  'Hilfe annehmen',
+  'Ziele visualisieren',
+  'Im Moment bleiben',
+  'Natur genießen',
+];
 
-// Daily do's and don'ts
-const dailyDosAndDonts: Record<string, { dos: string[], donts: string[] }> = {
-  'Aries': {
-    dos: ['Neue Projekte starten', 'Sport treiben', 'Führung übernehmen'],
-    donts: ['Impulsive Entscheidungen', 'Andere überrennen', 'Ungeduld zeigen'],
-  },
-  'Taurus': {
-    dos: ['Gemütlichkeit genießen', 'Finanzen planen', 'Sinne verwöhnen'],
-    donts: ['Sturheit', 'Veränderungen blockieren', 'Materialismus'],
-  },
-  'Gemini': {
-    dos: ['Kommunizieren', 'Lernen', 'Netzwerken'],
-    donts: ['Oberflächlichkeit', 'Zu viel reden', 'Entscheidungen vermeiden'],
-  },
-  'Cancer': {
-    dos: ['Familie pflegen', 'Gefühle ausdrücken', 'Intuition folgen'],
-    donts: ['Sich zurückziehen', 'Überfürsorglichkeit', 'In der Vergangenheit leben'],
-  },
-  'Leo': {
-    dos: ['Kreativ sein', 'Großzügigkeit zeigen', 'Im Mittelpunkt stehen'],
-    donts: ['Arroganz', 'Dominanz', 'Aufmerksamkeit erzwingen'],
-  },
-  'Virgo': {
-    dos: ['Organisieren', 'Helfen', 'Details beachten'],
-    donts: ['Perfektionismus', 'Überkritik', 'Sich sorgen'],
-  },
-  'Libra': {
-    dos: ['Harmonie schaffen', 'Schönheit genießen', 'Diplomatie üben'],
-    donts: ['Unentschlossenheit', 'Konflikt vermeiden', 'Abhängigkeit'],
-  },
-  'Scorpio': {
-    dos: ['Tief gehen', 'Transformieren', 'Authentisch sein'],
-    donts: ['Misstrauen', 'Manipulation', 'Kontrollzwang'],
-  },
-  'Sagittarius': {
-    dos: ['Abenteuer suchen', 'Lernen', 'Optimistisch bleiben'],
-    donts: ['Übertreibung', 'Verantwortungslosigkeit', 'Taktlosigkeit'],
-  },
-  'Capricorn': {
-    dos: ['Ziele verfolgen', 'Verantwortung übernehmen', 'Planen'],
-    donts: ['Pessimismus', 'Kälte', 'Workaholismus'],
-  },
-  'Aquarius': {
-    dos: ['Innovation fördern', 'Unabhängig sein', 'Gemeinschaft dienen'],
-    donts: ['Distanziertheit', 'Starrköpfigkeit', 'Rebellion um ihrer selbst willen'],
-  },
-  'Pisces': {
-    dos: ['Träumen', 'Mitgefühl zeigen', 'Kreativ sein'],
-    donts: ['Realitätsflucht', 'Opferrolle', 'Grenzenlosigkeit'],
-  },
-};
+const universalDonts: string[] = [
+  'Überstürzte Entscheidungen',
+  'Sich selbst kritisieren',
+  'Andere vergleichen',
+  'Negativität festhalten',
+  'Grenzen ignorieren',
+  'Sich überfordern',
+  'Wichtiges aufschieben',
+  'Isolation suchen',
+  'Zweifel nachgeben',
+  'Perfektionismus',
+  'Kontrollzwang',
+  'Sich verstellen',
+  'Bedürfnisse unterdrücken',
+  'Ungeduld zeigen',
+  'Altes festhalten',
+  'Sich ablenken',
+  'Voreilige Urteile',
+  'Energie verschwenden',
+];
 
 export default function HomePage({ title, userData, onResetData, onNavigate }: HomePageProps) {
   const insets = useSafeAreaInsets();
@@ -243,7 +200,42 @@ export default function HomePage({ title, userData, onResetData, onNavigate }: H
       
       if (storedData) {
         const data: StreakData = JSON.parse(storedData);
-        const lastVisit = new Date(data.lastVisitDate);
+    
+
+  // Get a consistent selection based on sign and date
+  const getSignBasedIndex = (sign: string, arrayLength: number, offset: number = 0): number => {
+    const signs = ['Aries', 'Taurus', 'Gemini', 'Cancer', 'Leo', 'Virgo', 'Libra', 'Scorpio', 'Sagittarius', 'Capricorn', 'Aquarius', 'Pisces'];
+    const signIndex = signs.indexOf(sign);
+    const today = new Date();
+    const dayOfYear = Math.floor((today.getTime() - new Date(today.getFullYear(), 0, 0).getTime()) / (1000 * 60 * 60 * 24));
+    
+    // Create a pseudo-random but consistent index based on sign, day, and offset
+    const hash = (signIndex * 37 + dayOfYear * 17 + offset * 13) % arrayLength;
+    return hash;
+  };
+
+  const getDailyHoroscope = (sign: string): string => {
+    const index = getSignBasedIndex(sign, universalHoroscopes.length);
+    return universalHoroscopes[index];
+  };
+
+  const getDailyDos = (sign: string): string[] => {
+    const indices = [
+      getSignBasedIndex(sign, universalDos.length, 0),
+      getSignBasedIndex(sign, universalDos.length, 1),
+      getSignBasedIndex(sign, universalDos.length, 2),
+    ];
+    return indices.map(i => universalDos[i]);
+  };
+
+  const getDailyDonts = (sign: string): string[] => {
+    const indices = [
+      getSignBasedIndex(sign, universalDonts.length, 0),
+      getSignBasedIndex(sign, universalDonts.length, 1),
+      getSignBasedIndex(sign, universalDonts.length, 2),
+    ];
+    return indices.map(i => universalDonts[i]);
+  };    const lastVisit = new Date(data.lastVisitDate);
         const daysDiff = Math.floor((new Date(today).getTime() - lastVisit.getTime()) / (1000 * 60 * 60 * 24));
         
         if (data.lastVisitDate === today) {
@@ -487,22 +479,21 @@ export default function HomePage({ title, userData, onResetData, onNavigate }: H
         <View style={styles.streakContent}>
           <View style={styles.streakTextRow}>
             <MaterialCommunityIcons name="fire" size={20} color="#000" />
-            <Text style={styles.streakText}>
-              {streakData.currentStreak} Tag{streakData.currentStreak !== 1 ? 'e' : ''} Streak
+            <TegetDailyHoroscope(natalData.sunSign)}
             </Text>
           </View>
-          <Text style={styles.streakGoal}>
-            Ziel: {getNextStreakGoal(streakData.currentStreak)}
-          </Text>
-        </View>
-        <View style={styles.progressBarContainer}>
-          <View 
-            style={[
-              styles.progressBar,
-              { 
-                width: `${Math.min((streakData.currentStreak / getNextStreakGoal(streakData.currentStreak)) * 100, 100)}%` 
-              }
-            ]} 
+
+          {/* Daily Do's and Don'ts */}
+          <View style={styles.dosAndDontsContainer}>
+            <View style={styles.dosColumn}>
+              <Text style={styles.columnTitle}>Heute empfohlen</Text>
+              {getDailyDos(natalData.sunSign).map((doItem, index) => (
+                <Text key={index} style={styles.listItem}>• {doItem}</Text>
+              ))}
+            </View>
+            <View style={styles.dontsColumn}>
+              <Text style={styles.columnTitle}>Heute vermeiden</Text>
+              {getDailyDonts(natalData.sunSign)
           />
         </View>
       </View>
