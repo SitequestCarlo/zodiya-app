@@ -376,7 +376,7 @@ export default function HomePage({ title, userData, onResetData, onNavigate }: H
   const getGreeting = () => {
     const hour = new Date().getHours();
     if (hour < 12) return 'Guten Morgen';
-    if (hour < 18) return 'Howdy';
+    if (hour < 18) return 'Guten Tag';
     return 'Guten Abend';
   };
 
