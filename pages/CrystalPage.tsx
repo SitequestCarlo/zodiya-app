@@ -213,47 +213,34 @@ function CrystalViewer({ crystal }: { crystal: Crystal }) {
     };
   }, []);
 
-  const onContextCreate = async (gl: ExpoWebGLRenderingContext) => {
-    const { drawingBufferWidth: width, drawingBufferHeight: height } = gl;
-
-    const renderer = new Renderer({ gl, antialias: true });
-    renderer.setSize(width, height);
-    renderer.setClearColor(0xf5f5f5, 1); // Light grey background
-    rendererRef.current = renderer;
-
+  const setupScene = (width: number, height: number) => {
     const scene = new THREE.Scene();
     sceneRef.current = scene;
 
     const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000);
-    camera.position.set(0, 0, 3); // Closer to model
+    camera.position.set(0, 0, 3);
     cameraRef.current = camera;
 
-    // Lighting - comprehensive setup for all models
-    // Strong ambient light to ensure all surfaces are visible
+    // Lighting setup
     const ambientLight = new THREE.AmbientLight(0xffffff, 1.2);
     scene.add(ambientLight);
 
-    // Main key light from front-top-right
     const keyLight = new THREE.DirectionalLight(0xffffff, 1.5);
     keyLight.position.set(5, 5, 5);
     scene.add(keyLight);
 
-    // Fill light from front-top-left
     const fillLight = new THREE.DirectionalLight(0xffffff, 1.0);
     fillLight.position.set(-5, 5, 5);
     scene.add(fillLight);
 
-    // Back light for rim lighting
     const backLight = new THREE.DirectionalLight(0xffffff, 0.8);
     backLight.position.set(0, 3, -5);
     scene.add(backLight);
 
-    // Bottom fill to illuminate underside
     const bottomLight = new THREE.DirectionalLight(0xffffff, 0.6);
     bottomLight.position.set(0, -5, 0);
     scene.add(bottomLight);
 
-    // Side lights for full coverage
     const leftLight = new THREE.DirectionalLight(0xffffff, 0.5);
     leftLight.position.set(-5, 0, 0);
     scene.add(leftLight);
@@ -261,31 +248,45 @@ function CrystalViewer({ crystal }: { crystal: Crystal }) {
     const rightLight = new THREE.DirectionalLight(0xffffff, 0.5);
     rightLight.position.set(5, 0, 0);
     scene.add(rightLight);
+  };
 
-    // Animation loop with orbit rotation
-    const animate = () => {
-      animationFrameRef.current = requestAnimationFrame(animate);
-      
-      if (modelRef.current) {
-        // Apply rotation from touch or auto-rotate
-        if (touchRef.current.autoRotate && !touchRef.current.isActive) {
-          touchRef.current.rotationY += 0.005;
-        }
-        modelRef.current.rotation.x = touchRef.current.rotationX;
-        modelRef.current.rotation.y = touchRef.current.rotationY;
+  const animate = (gl: ExpoWebGLRenderingContext) => {
+    animationFrameRef.current = requestAnimationFrame(() => animate(gl));
+    
+    if (modelRef.current) {
+      if (touchRef.current.autoRotate && !touchRef.current.isActive) {
+        touchRef.current.rotationY += 0.005;
       }
-      
-      if (rendererRef.current && sceneRef.current && cameraRef.current) {
-        rendererRef.current.render(sceneRef.current, cameraRef.current);
-        gl.endFrameEXP();
-      }
-    };
-    animate();
+      modelRef.current.rotation.x = touchRef.current.rotationX;
+      modelRef.current.rotation.y = touchRef.current.rotationY;
+    }
+    
+    if (rendererRef.current && sceneRef.current && cameraRef.current) {
+      rendererRef.current.render(sceneRef.current, cameraRef.current);
+      gl.endFrameEXP();
+    }
+  };
+
+  const onContextCreate = async (gl: ExpoWebGLRenderingContext) => {
+    const { drawingBufferWidth: width, drawingBufferHeight: height } = gl;
+
+    const renderer = new Renderer({ gl, antialias: true });
+    renderer.setSize(width, height);
+    renderer.setClearColor(0xf5f5f5, 1);
+    rendererRef.current = renderer;
+
+    setupScene(width, height);
+    animate(gl);
 
     // Load GLB model asynchronously
     console.log('[CrystalViewer] Starting to load model for:', crystal.name);
+    await loadModel(sceneRef.current!);
+  };
+
+  const loadModel = async (scene: THREE.Scene) => {
+    console.log('[CrystalViewer] Loading model for:', crystal.name);
     try {
-      // Download model and texture assets
+      // Use Asset system for both platforms - expo handles web automatically
       const modelAsset = Asset.fromModule(crystal.model);
       const textureAsset = Asset.fromModule(crystal.texture);
       
@@ -295,29 +296,65 @@ function CrystalViewer({ crystal }: { crystal: Crystal }) {
       ]);
       
       console.log('[CrystalViewer] Assets downloaded');
-      console.log('[CrystalViewer] Model URI:', modelAsset.localUri);
-      console.log('[CrystalViewer] Texture URI:', textureAsset.localUri);
+      console.log('[CrystalViewer] Model URI:', modelAsset.localUri || modelAsset.uri);
+      console.log('[CrystalViewer] Texture URI:', textureAsset.localUri || textureAsset.uri);
+      console.log('[CrystalViewer] Platform:', Platform.OS);
       
-      // Load texture via expo-three
+      // Load texture
       let texture: THREE.Texture | null = null;
+      const textureUri = textureAsset.localUri || textureAsset.uri;
+      
       try {
+        // Try expo-three loadAsync first
+        console.log('[CrystalViewer] Attempting to load texture with expo-three...');
         texture = await loadAsync(textureAsset) as THREE.Texture;
         if (texture) {
           texture.flipY = false;
           texture.colorSpace = THREE.SRGBColorSpace;
           texture.needsUpdate = true;
-          console.log('[CrystalViewer] Texture loaded successfully');
+          console.log('[CrystalViewer] Texture loaded successfully via expo-three');
         }
       } catch (texError) {
-        console.log('[CrystalViewer] Could not load texture:', texError);
+        console.log('[CrystalViewer] expo-three loadAsync failed:', texError);
+        
+        // Fallback to THREE.TextureLoader for web
+        if (Platform.OS === 'web' && textureUri) {
+          try {
+            console.log('[CrystalViewer] Attempting THREE.TextureLoader fallback with URI:', textureUri);
+            const textureLoader = new THREE.TextureLoader();
+            texture = await new Promise<THREE.Texture>((resolve, reject) => {
+              textureLoader.load(
+                textureUri,
+                (loadedTexture) => {
+                  loadedTexture.flipY = false;
+                  loadedTexture.colorSpace = THREE.SRGBColorSpace;
+                  loadedTexture.needsUpdate = true;
+                  console.log('[CrystalViewer] Texture loaded successfully via THREE.TextureLoader');
+                  resolve(loadedTexture);
+                },
+                (progress) => {
+                  console.log('[CrystalViewer] Texture loading progress:', progress.loaded, '/', progress.total);
+                },
+                (error) => {
+                  console.error('[CrystalViewer] THREE.TextureLoader error:', error);
+                  reject(error);
+                }
+              );
+            });
+          } catch (loaderError) {
+            console.error('[CrystalViewer] Both texture loading methods failed:', loaderError);
+          }
+        }
       }
+      
+      const modelUri = modelAsset.localUri || modelAsset.uri;
       
       // Load GLB file using fetch + GLTFLoader.parse
       let model: THREE.Object3D | null = null;
       
       try {
         console.log('[CrystalViewer] Fetching GLB file...');
-        const response = await fetch(modelAsset.localUri!);
+        const response = await fetch(modelUri);
         const arrayBuffer = await response.arrayBuffer();
         console.log('[CrystalViewer] GLB fetched, size:', arrayBuffer.byteLength);
         
@@ -345,21 +382,36 @@ function CrystalViewer({ crystal }: { crystal: Crystal }) {
         model.traverse((child: any) => {
           if (child.isMesh) {
             meshCount++;
+            
+            // Check if model already has textures embedded
+            const existingMaterial = child.material;
+            let existingTexture = null;
+            if (existingMaterial && existingMaterial.map) {
+              console.log('[CrystalViewer] Mesh', meshCount, 'already has embedded texture');
+              existingTexture = existingMaterial.map;
+            }
+            
+            // Use our loaded texture, or fall back to embedded texture
+            const textureToUse = texture || existingTexture;
+            
             const newMaterial = new THREE.MeshStandardMaterial({
               color: 0xffffff,
               metalness: 0.2,
               roughness: 0.5,
               side: THREE.DoubleSide,
             });
-            if (texture) {
-              newMaterial.map = texture;
+            
+            if (textureToUse) {
+              newMaterial.map = textureToUse;
               newMaterial.needsUpdate = true;
-              console.log('[CrystalViewer] Applied texture to mesh', meshCount);
+              console.log('[CrystalViewer] Applied texture to mesh', meshCount, 'source:', texture ? 'loaded' : 'embedded');
             } else {
               console.log('[CrystalViewer] No texture available for mesh', meshCount);
             }
+            
             child.material = newMaterial;
-            child.material.needsUpdate = true;
+            child.castShadow = true;
+            child.receiveShadow = true;
           }
         });
         console.log('[CrystalViewer] Applied materials to', meshCount, 'meshes, texture:', !!texture);
@@ -415,36 +467,40 @@ function CrystalViewer({ crystal }: { crystal: Crystal }) {
 
   // Touch handlers for orbit control
   const handleTouchStart = (e: any) => {
-    const touch = e.nativeEvent.touches[0];
+    const touch = Platform.OS === 'web' && e.nativeEvent.touches === undefined
+      ? (e.nativeEvent as MouseEvent)
+      : e.nativeEvent.touches?.[0];
     if (touch) {
       touchRef.current.isActive = true;
-      touchRef.current.lastX = touch.pageX;
-      touchRef.current.lastY = touch.pageY;
+      touchRef.current.lastX = Platform.OS === 'web' && 'clientX' in touch ? touch.clientX : touch.pageX;
+      touchRef.current.lastY = Platform.OS === 'web' && 'clientY' in touch ? touch.clientY : touch.pageY;
       touchRef.current.autoRotate = false;
     }
   };
 
   const handleTouchMove = (e: any) => {
     if (!touchRef.current.isActive) return;
-    const touch = e.nativeEvent.touches[0];
+    const touch = Platform.OS === 'web' && e.nativeEvent.touches === undefined
+      ? (e.nativeEvent as MouseEvent)
+      : e.nativeEvent.touches?.[0];
     if (touch) {
-      const deltaX = touch.pageX - touchRef.current.lastX;
-      const deltaY = touch.pageY - touchRef.current.lastY;
+      const currentX = Platform.OS === 'web' && 'clientX' in touch ? touch.clientX : touch.pageX;
+      const currentY = Platform.OS === 'web' && 'clientY' in touch ? touch.clientY : touch.pageY;
+      const deltaX = currentX - touchRef.current.lastX;
+      const deltaY = currentY - touchRef.current.lastY;
       
       touchRef.current.rotationY += deltaX * 0.01;
       touchRef.current.rotationX += deltaY * 0.01;
       
-      // Clamp vertical rotation
       touchRef.current.rotationX = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, touchRef.current.rotationX));
       
-      touchRef.current.lastX = touch.pageX;
-      touchRef.current.lastY = touch.pageY;
+      touchRef.current.lastX = currentX;
+      touchRef.current.lastY = currentY;
     }
   };
 
   const handleTouchEnd = () => {
     touchRef.current.isActive = false;
-    // Resume auto-rotate after 3 seconds of no interaction
     setTimeout(() => {
       if (!touchRef.current.isActive) {
         touchRef.current.autoRotate = true;
@@ -452,23 +508,16 @@ function CrystalViewer({ crystal }: { crystal: Crystal }) {
     }, 3000);
   };
 
-  if (Platform.OS === 'web') {
-    return (
-      <View style={styles.viewerContainer}>
-        <View style={styles.webPlaceholder}>
-          <Text style={styles.placeholderText}>3D Preview</Text>
-          <Text style={styles.placeholderSubtext}>{crystal.name}</Text>
-        </View>
-      </View>
-    );
-  }
-
   return (
     <View 
       style={styles.viewerContainer}
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
+      onMouseDown={handleTouchStart}
+      onMouseMove={handleTouchMove}
+      onMouseUp={handleTouchEnd}
+      onMouseLeave={handleTouchEnd}
     >
       <GLView
         style={styles.glView}
@@ -581,22 +630,6 @@ const styles = StyleSheet.create({
   },
   glView: {
     flex: 1,
-  },
-  webPlaceholder: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#e8e8e8',
-  },
-  placeholderText: {
-    fontSize: 18,
-    color: '#666',
-    fontWeight: '600',
-  },
-  placeholderSubtext: {
-    fontSize: 14,
-    color: '#888',
-    marginTop: 4,
   },
   loadingOverlay: {
     ...StyleSheet.absoluteFillObject,
